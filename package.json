@@ -22,8 +22,13 @@
   "dependencies": {
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
+    "@nestjs/mongoose": "^6.2.1",
     "@nestjs/platform-express": "^6.7.2",
     "@nestjs/swagger": "^4.1.15",
+    "@types/mongoose": "^5.5.42",
+    "cookie-parser": "^1.4.4",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.8.9",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
