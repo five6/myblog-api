@@ -2,6 +2,7 @@ import { Injectable, Get, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../interface/user.interface';
 import { UserDto } from 'src/dto/user.dto';
+import { Pagination } from '../../config/Pagination';
 
 @Injectable()
 export class UserService {
@@ -17,11 +18,11 @@ export class UserService {
     }
   }
 
-  async find(json: User = {}, fields: string = '', pageSize: number = 10, currentPage: number = 0) {
+  async find(json: User = {}, fields: string = '', pagination: Pagination = { currentPage: 1, pageSize: 10 }) {
     try {
-      const skip = (currentPage - 1) * pageSize;
+      const skip = (pagination.currentPage - 1) * pagination.pageSize;
       return Promise.all([
-        this.userModel.find(json).skip(skip).limit(pageSize),
+        this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize),
         this.userModel.count(json),
       ]);
     } catch (error) {

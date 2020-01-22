@@ -3,7 +3,7 @@ import { UserService } from '../../../service/user/user.service';
 import { User } from '../../../interface/user.interface';
 import { ApiParam } from '@nestjs/swagger';
 import { UserDto } from 'src/dto/user.dto';
-
+import { Pagination } from '../../../config/Pagination';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) { }
@@ -15,10 +15,10 @@ export class UserController {
   }
 
   @Get()
-  async find(userInterface: User, @Query('pageSize') pageSize: number, @Query('currentPage') currentPage: number) {
+  async find(userInterface: User, @Query() pagination: Pagination) {
     const fields = '';
-    console.log(pageSize, pageSize);
-    const items = await this.userService.find(userInterface, fields, currentPage, pageSize);
+    console.log(pagination.pageSize, pagination.pageSize);
+    const items = await this.userService.find(userInterface, fields, pagination);
     return {
       items: items[0],
       totalCount: items[1]
