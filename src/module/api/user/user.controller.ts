@@ -3,7 +3,7 @@ import { UserService } from '../../../service/user/user.service';
 import { User } from '../../../interface/user.interface';
 import { ApiParam } from '@nestjs/swagger';
 import { UserDto } from 'src/dto/user.dto';
-import { Pagination } from '../../../config/Pagination';
+import { Pagination } from '../../../config/result-beans/Pagination';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) { }

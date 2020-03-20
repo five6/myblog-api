@@ -1,16 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString } from 'class-validator';
 
-
 export class UserDto {
-  _id?: string
+  _id?: string;
 
   @IsString()
-  @ApiProperty({description: '小程序用户openId'})
-  openid: string;
-
-  @IsString()
-  @ApiProperty({description: '微信昵称'})
+  @ApiProperty({description: '用户昵称'})
   nickName: string;
 
   @IsInt()
@@ -43,5 +38,5 @@ export class UserDto {
 
   @IsInt()
   @ApiProperty({description: '注册时间'})
-  ctime?: number
+  ctime?: number;
 }

@@ -2,7 +2,7 @@ import { Injectable, Get, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../interface/user.interface';
 import { UserDto } from 'src/dto/user.dto';
-import { Pagination } from '../../config/Pagination';
+import { Pagination } from '../../config/result-beans/Pagination';
 
 @Injectable()
 export class UserService {

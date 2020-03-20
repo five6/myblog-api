@@ -1,13 +1,12 @@
 export interface User {
-  _id?: String,
-  openid?: String,
-  nickName?: String,
-  gender?: Number,
-  language?: String,
-  city?: String,
-  province?: String,
-  country?: String,
-  avatarUrl?: String,
-  mobile?: String,
-  ctime?: Number
+  _id?: string;
+  nickName?: string;
+  gender?: number;
+  language?: string;
+  city?: string;
+  province?: string;
+  country?: string;
+  avatarUrl?: string;
+  mobile?: string;
+  ctime?: number;
 }
