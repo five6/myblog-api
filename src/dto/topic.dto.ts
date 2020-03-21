@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsBoolean } from 'class-validator';
 
 export class Topic {
   _id?: string;
+
+  @IsString()
+  @ApiProperty({description: '文章类型'})
+  topic_type: string;
 
   @IsString()
   @ApiProperty({description: '文章标题'})
@@ -11,6 +15,10 @@ export class Topic {
   @IsString()
   @ApiProperty({description: '文章内容'})
   content: string;
+
+  @IsBoolean()
+  @ApiProperty({description: '是否置顶'})
+  put_top: boolean;
 
   @IsString()
   @ApiProperty({description: '用户id'})

@@ -2,36 +2,33 @@ import * as mongoose from 'mongoose';
 
 const d = new Date();
 export const UserSchema = new mongoose.Schema({
-  openid: {
-    type: String,
-  },
   nickName: {
-    type: String
+    type: String,
   },
   gender: {
     type: Number,
-    default: 1
+    default: 1,
   },
   language: {
-    type: String
+    type: String,
   },
   city: {
-    type: String
+    type: String,
   },
   province: {
-    type: String
+    type: String,
   },
   country: {
-    type: String
+    type: String,
   },
   mobile: {
-    type: Number
+    type: Number,
   },
   avatarUrl: {
-    type: String
+    type: String,
   },
   ctime: {
     type: Number,
-    default: d.getTime()
-  }
-})
+    default: d.getTime(),
+  },
+});

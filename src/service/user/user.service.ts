@@ -21,6 +21,7 @@ export class UserService {
   async find(json: User = {}, fields: string = '', pagination: Pagination = { currentPage: 1, pageSize: 10 }) {
     try {
       const skip = (pagination.currentPage - 1) * pagination.pageSize;
+      console.log(pagination);
       return Promise.all([
         this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize),
         this.userModel.count(json),

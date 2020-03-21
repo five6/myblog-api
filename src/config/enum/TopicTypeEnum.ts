@@ -3,5 +3,5 @@ export enum TopicTypeEnum {
     ASK,
     ANSWER,
     SHARE,
-    JOB
+    JOB,
 }

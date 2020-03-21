@@ -5,7 +5,7 @@ import { ApiModule } from './module/api/api.module';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [AdminModule, ApiModule, MongooseModule.forRoot('mongodb://localhost/bala', { useUnifiedTopology: true })],
+  imports: [AdminModule, ApiModule, MongooseModule.forRoot('mongodb://localhost/mylog', { useUnifiedTopology: true })],
   controllers: [AppController],
   providers: [],
 })

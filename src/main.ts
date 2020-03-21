@@ -17,6 +17,8 @@ async function bootstrap() {
 
   //配置cookie中间件
   app.use(cookieParser("this signed cookies"));
+  
+  app.setGlobalPrefix('api/v1');
 
   //配置session的中间件
   app.use(session({
@@ -29,14 +31,14 @@ async function bootstrap() {
 
 
   const options = new DocumentBuilder()
-    .setTitle('样例网站后台接口')
-    .setDescription('样例网站后台接口描述')
+    .setTitle('56网站后台接口')
+    .setDescription('56网站后台接口描述')
     .setVersion('1.0')
     // .addTag('user')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('swagger-ui', app, document);
 
-  await app.listen(3000);
+  await app.listen(9999);
 }
 bootstrap();
