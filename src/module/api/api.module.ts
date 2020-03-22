@@ -10,8 +10,10 @@ import { UserService } from '../../service/user/user.service';
 import { TopicService } from '../../service/topic/topic.service';
 import { ReplyService } from 'src/service/reply/reply.service';
 import { TopicTypeService } from 'src/service/topic-type/topic-type.service';
+import { ToolsService } from '../../service/tools/tools.service';
 
 import { UserSchema } from '../../schema/user.schema';
+
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -22,7 +24,7 @@ import { UserSchema } from '../../schema/user.schema';
     ]),
   ],
   controllers: [UserController, TopicController, ReplyController, TopicTypeController],
-  providers: [UserService, TopicService, ReplyService, TopicTypeService],
+  providers: [UserService, TopicService, ReplyService, TopicTypeService, ToolsService],
   exports: [UserService, TopicService, ReplyService],
 })
 export class ApiModule { }
