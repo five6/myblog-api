@@ -1,12 +1,11 @@
 export interface User {
   _id?: string;
+  username?: string;
+  password?: string;
   nickName?: string;
   gender?: number;
-  language?: string;
-  city?: string;
-  province?: string;
-  country?: string;
+  email?: string;
   avatarUrl?: string;
   mobile?: string;
-  ctime?: number;
+  registerTime?: number;
 }

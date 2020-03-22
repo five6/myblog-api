@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsEmail } from 'class-validator';
 
 export class UserDto {
   _id?: string;
+
+  @IsString()
+  @ApiProperty({description: '用户昵称'})
+  username: string;
+
+  @IsString()
+  @ApiProperty({description: '用户密码'})
+  password: string;
 
   @IsString()
   @ApiProperty({description: '用户昵称'})
@@ -12,21 +20,9 @@ export class UserDto {
   @ApiProperty({description: '用户性别'})
   gender?: number;
 
-  @IsString()
-  @ApiProperty({description: '语言'})
-  language?: string;
-
-  @IsString()
-  @ApiProperty({description: '用户所在城市'})
-  city?: string;
-
-  @IsString()
-  @ApiProperty({description: '用户所在省份'})
-  province?: string;
-
-  @IsString()
-  @ApiProperty({description: '用户所在国家'})
-  country?: string;
+  @IsEmail()
+  @ApiProperty({description: '用户邮箱'})
+  email: string;
 
   @IsString()
   @ApiProperty({description: '用户头像地址'})
@@ -37,6 +33,5 @@ export class UserDto {
   mobile?: number;
 
   @IsInt()
-  @ApiProperty({description: '注册时间'})
-  ctime?: number;
+  registerTime?: number;
 }

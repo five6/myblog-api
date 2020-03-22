@@ -5,12 +5,15 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // 配置静态资源目录
   app.useStaticAssets(path.join(__dirname, '..', 'public'));
+
   // 配置模板引擎
   app.setBaseViewsDir('views');
   app.setViewEngine('ejs');
@@ -19,7 +22,10 @@ async function bootstrap() {
   app.use(cookieParser('this signed cookies'));
 
   // 管理后台和前台api地址前缀
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('/api/v1');
+
+  // 配置全局错误filter
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // 配置session的中间件
   app.use(session({

@@ -1,7 +1,8 @@
 export interface Topic {
     _id?: string;
-    type: string;
-    name: string;
+    topic_type: string;
+    title: string;
     content?: string;
-    like: string[];
+    put_top: boolean;
+    from_uid: string[];
 }
