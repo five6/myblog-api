@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger, UseGuards } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 
 import { UserService } from '../../../service/user/user.service';
@@ -7,24 +7,27 @@ import { UserDto } from '../../../dto/user.dto';
 import { Pagination } from '../../../config/result-beans/Pagination';
 import { ResultPagination } from '../../../config/result-beans/ResultPagination';
 import { AuthService } from '../../../service/auth/auth.service';
-import { Result } from 'src/config/result-beans/Result';
+import { Result } from '../../../config/result-beans/Result';
+import { JwtAuthGuard } from 'src/service/auth/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+
 @Controller('frontend/users')
 export class UserController {
   logger = new Logger();
   constructor(private userService: UserService, private authService: AuthService) { }
 
 
-  @Post('login')
+  @Post('signin')
   async login(@Body() body) {
     const user = await this.userService.findOne({username: body.username, password: body.password});
     if(!user) 
       throw new UnauthorizedException();
-    return this.authService.login(body);
+    return this.authService.signin(body);
   }
 
-  @Post('register')
-  async create(@Body() user: UserDto) {
-    const u =  await this.userService.create(user);
+  @Post('signup')
+  async signup(@Body() user: UserDto) {
+    const u =  await this.userService.signup(user);
     if(u)
       return new Result({
         datas: {
@@ -37,14 +40,22 @@ export class UserController {
     return u;
   }
 
+  @Get('signout')
+  @UseGuards(AuthGuard('jwt'))
+  async signout(@Body() userDto: UserDto) {
+      return this.userService.signout();
+  }
+
   @Get(':id')
   @ApiParam({ name: '用户id' })
-  async findOne(@Param('id') id) {
+  @UseGuards(AuthGuard('jwt'))
+  async findCurrent(@Param('id') id) {
     return this.userService.findOne(id);
   }
 
   @Get()
-  async find(userInterface: User, @Query('pagination') pagination: Pagination) {
+  @UseGuards(AuthGuard('jwt'))
+  async find(userInterface: User, @Query() pagination: Pagination) {
     const fields = '';
     const items = await this.userService.find(userInterface, fields, pagination);
     return  new ResultPagination({

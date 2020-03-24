@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-
+import { Config } from './config/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -22,7 +22,7 @@ async function bootstrap() {
   app.use(cookieParser('this signed cookies'));
 
   // 管理后台和前台api地址前缀
-  app.setGlobalPrefix('/api/v1');
+  app.setGlobalPrefix(Config.api_prefix);
 
   // 配置全局错误filter
   app.useGlobalFilters(new HttpExceptionFilter());

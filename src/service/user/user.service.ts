@@ -31,7 +31,7 @@ export class UserService {
     }
   }
 
-  async create(userDto: UserDto) {
+  async signup(userDto: UserDto) {
     const model = this.userModel(userDto)
     const salt = model.makeSalt();
     model.salt = salt;
@@ -39,5 +39,7 @@ export class UserService {
     return await this.userModel.create(model); // model.save();
   }
 
+  async signout() {
+  }
 
 }

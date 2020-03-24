@@ -1,40 +1,39 @@
 import * as mongoose from 'mongoose';
+const { Schema } = mongoose;
 import * as crypto from 'crypto';
 
 const d = new Date();
 const _UserSchema = new mongoose.Schema({
-  nickName: {
-    type: String,
+  __v: { type: Number, select: false },
+  nickName: { type: String },
+  gender: { type: String, default: 'male',enum: ['male', 'female']},
+  username: {type: String},
+  password: { type: String, select: false },
+  email: { type: String },
+  mobile: { type: Number },
+  avatarUrl: { type: String },
+  registerTime: { type: Number, default: d.getTime() },
+  salt: { type: String, select: false },
+  following: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    select: false,
   },
-  gender: {
-    type: String,
-    default: 'male',
-    enum: ['male', 'female']
+  followingTopics: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
+    select: false,
   },
-  username: {
-    type: String,
+  likingAnswers: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    select: false,
   },
-  password: {
-    type: String,
-    select: false // 查询的时候，不显示此字段
+  dislikingAnswers: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    select: false,
   },
-  email: {
-    type: String,
+  collectingAnswers: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    select: false,
   },
-  mobile: {
-    type: Number,
-  },
-  avatarUrl: {
-    type: String,
-  },
-  registerTime: {
-    type: Number,
-    default: d.getTime(),
-  },
-  salt: {
-    type: String,
-    select: false // 查询的时候，不显示此字段
-  }
 });
 
 _UserSchema.methods = {
