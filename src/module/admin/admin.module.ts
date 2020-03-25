@@ -11,14 +11,17 @@ import { UserSchema } from '../../schema/user.schema';
 import { ToolsService } from '../../service/tools/tools.service';
 import { AdminauthMiddleware } from '../../middleware/adminauth.middleware';
 import { UserController } from './user/user.controller';
+import { TopicSchema } from '../../schema/topic.schema';
+import { TopicTypeSchema } from '../../schema/topic-type.schema';
+import { ReplySchema } from '../../schema/reply.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
-      { name: 'topic', schema: UserSchema, collection: 'topic' },
-      { name: 'topic_type', schema: UserSchema, collection: 'reply_type' },
-      { name: 'reply', schema: UserSchema, collection: 'reply' },
+      { name: 'topic', schema: TopicSchema, collection: 'topic' },
+      { name: 'topic_type', schema: TopicTypeSchema, collection: 'reply_type' },
+      { name: 'reply', schema: ReplySchema, collection: 'reply' },
     ]),
   ],
   controllers: [UserController],

@@ -36,7 +36,7 @@ export class UserService {
     const salt = model.makeSalt();
     model.salt = salt;
     model.password = model.encryptPassword(model.password);
-    return await this.userModel.create(model); // model.save();
+    return await model.save();
   }
 
   async signout() {

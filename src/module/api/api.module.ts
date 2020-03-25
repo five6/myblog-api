@@ -1,7 +1,6 @@
 import { Module, LoggerService } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from '../../service/auth/constants';
 import { PassportModule } from '@nestjs/passport';
 
 
@@ -17,7 +16,9 @@ import { TopicTypeService } from '../../service/topic-type/topic-type.service';
 import { ToolsService } from '../../service/tools/tools.service';
 
 import { UserSchema } from '../../schema/user.schema';
-import { AuthService } from '../../service/auth/auth.service';
+import { AuthModule } from '../common/auth/auth.module';
+import { AuthService } from '../common/auth/auth.service';
+import { jwtConstants } from '../common/auth/constants';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthService } from '../../service/auth/auth.service';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '600s' },
     }),
+    AuthModule,
   ],
   controllers: [UserController, TopicController, ReplyController, TopicTypeController],
   providers: [UserService, TopicService, ReplyService, TopicTypeService, ToolsService, AuthService],

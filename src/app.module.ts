@@ -12,7 +12,6 @@ import { PublicModule } from './module/common/public/public.module';
 @Module({
   imports: [
     PublicModule, AdminModule, ApiModule, FilesModule, 
-    MongooseModule.forRoot(Config.mongo_db, { useNewUrlParser: true, useUnifiedTopology: true })
   ],
   controllers: [AppController],
   providers: [],

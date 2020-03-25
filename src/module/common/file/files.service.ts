@@ -4,17 +4,20 @@ import { MongoGridFS } from 'mongo-gridfs'
 import { GridFSBucketReadStream } from 'mongodb'
 import { File } from '../../../config/result-beans/File'
 import * as mongoose from 'mongoose';
-import { Config } from 'src/config/config';
+import { Config } from '../../../config/config';
 
 @Injectable()
 export class FilesService {
 
     private fileModel: MongoGridFS;
 
-    // this.fileModel = new MongoGridFS(conn.db, 'fs');
     constructor() {
-      const con = mongoose.createConnection(Config.mongo_files);
-      this.fileModel = new MongoGridFS(con.db, 'fs');
+      mongoose.createConnection(Config.mongo_files, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      }).then(r => {
+        this.fileModel = new MongoGridFS(r.db, 'fs');
+      });
     }
   
 

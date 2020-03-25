@@ -2,7 +2,7 @@ import { Post, Get, Param, Res, Controller, UseInterceptors, UploadedFiles, Http
 import { ApiConsumes,  } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
-import { ResponseFile } from 'src/config/result-beans/ResponseFile';
+import { ResponseFile } from '../../../config/result-beans/ResponseFile';
 
 
 

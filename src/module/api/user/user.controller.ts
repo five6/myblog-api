@@ -6,9 +6,8 @@ import { User } from '../../../interface/user.interface';
 import { UserDto } from '../../../dto/user.dto';
 import { Pagination } from '../../../config/result-beans/Pagination';
 import { ResultPagination } from '../../../config/result-beans/ResultPagination';
-import { AuthService } from '../../../service/auth/auth.service';
+import { AuthService } from '../../common/auth/auth.service';
 import { Result } from '../../../config/result-beans/Result';
-import { JwtAuthGuard } from 'src/service/auth/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('frontend/users')
