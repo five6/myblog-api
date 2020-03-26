@@ -18,12 +18,12 @@ export class UserService {
     return false;
   }
 
-  async find(json: User = {}, fields: string = '', pagination: Pagination = { currentPage: 1, pageSize: 10 }) {
+  async find(json: User = {}, fields: string = '', pagination: Pagination) {
     try {
       const skip = (pagination.currentPage - 1) * pagination.pageSize;
-      return Promise.all([
-        this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize),
-        this.userModel.count(json),
+      return await Promise.all([
+        this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize).exec(),
+        this.userModel.countDocuments(json).exec(),
       ]);
     } catch (error) {
       this.logger.error(error);
@@ -40,6 +40,7 @@ export class UserService {
   }
 
   async signout() {
+    this
   }
 
 }

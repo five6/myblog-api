@@ -1,7 +1,7 @@
 export enum TopicTypeEnum {
-    NORMAL,
-    ASK,
-    ANSWER,
-    SHARE,
-    JOB,
+    NORMAL='NORMAL',
+    ASK='ASK',
+    ANSWER='ANSWER',
+    SHARE='SHARE',
+    JOB='JOB'
 }

@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Result } from '../../../config/result-beans/Result';
+import { TopicTypeEnum } from '../../../config/enum/TopicTypeEnum';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('topic-type')
-export class TopicTypeController {}
+export class TopicTypeController {
+    
+    @Get()
+    async index(): Promise<Result> {
+        return {
+            datas: TopicTypeEnum,
+            code: 0,
+            msg: '获取主题类型成功'
+        }
+    }
+}

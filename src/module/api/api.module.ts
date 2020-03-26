@@ -19,19 +19,20 @@ import { UserSchema } from '../../schema/user.schema';
 import { AuthModule } from '../common/auth/auth.module';
 import { AuthService } from '../common/auth/auth.service';
 import { jwtConstants } from '../common/auth/constants';
+import { Config } from '../../config/config';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
-      { name: 'topic', schema: UserSchema, collection: 'topic' },
-      { name: 'topic_type', schema: UserSchema, collection: 'reply_type' },
-      { name: 'reply', schema: UserSchema, collection: 'reply' },
+      { name: 'Topic', schema: UserSchema, collection: 'topic' },
+      // { name: 'Topic_type', schema: UserSchema, collection: 'reply_type' },
+      { name: 'Reply', schema: UserSchema, collection: 'reply' },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '600s' },
+      signOptions: { expiresIn: Config.jwtExpireTime },
     }),
     AuthModule,
   ],

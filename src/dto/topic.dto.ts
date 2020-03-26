@@ -1,28 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString, IsBoolean } from 'class-validator';
+import { TopicTypeEnum } from 'src/config/enum/TopicTypeEnum';
 
-export class Topic {
+export class TopicDto {
   _id?: string;
 
   @IsString()
-  @ApiProperty({description: '文章类型'})
-  topic_type: string;
+  @ApiProperty({description: '文章类型', required: true})
+  topic_type: {
+    type: TopicTypeEnum,
+  };
 
   @IsString()
-  @ApiProperty({description: '文章标题'})
-  title: string;
+  @ApiProperty({description: '文章标题', required:  true})
+  title: {
+    type: string,
+    required: true
+  };
 
   @IsString()
-  @ApiProperty({description: '文章内容'})
-  content: string;
+  @ApiProperty({description: '文章内容', required: true})
+  content: {
+    type: string,
+    required: true
+  };
 
   @IsBoolean()
-  @ApiProperty({description: '是否置顶'})
+  @ApiProperty({description: '是否置顶', required: false})
   put_top: boolean;
 
   @IsString()
-  @ApiProperty({description: '用户id'})
-  from_uid : string;
+  @ApiProperty({description: '用户id', required: true})
+  from_uid : {
+    type: string,
+    required: true
+  };
 
 
 }

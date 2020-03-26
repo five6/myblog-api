@@ -19,9 +19,9 @@ import { ReplySchema } from '../../schema/reply.schema';
   imports: [
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
-      { name: 'topic', schema: TopicSchema, collection: 'topic' },
-      { name: 'topic_type', schema: TopicTypeSchema, collection: 'reply_type' },
-      { name: 'reply', schema: ReplySchema, collection: 'reply' },
+      { name: 'Topic', schema: TopicSchema, collection: 'topic' },
+      // { name: 'Topic_type', schema: TopicTypeSchema, collection: 'reply_type' },
+      { name: 'Reply', schema: ReplySchema, collection: 'reply' },
     ]),
   ],
   controllers: [UserController],
