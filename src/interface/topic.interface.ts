@@ -4,5 +4,5 @@ export interface Topic {
     title?: string;
     content?: string;
     put_top?: boolean;
-    from_uid?: string[];
+    from_uid?: string;
 }

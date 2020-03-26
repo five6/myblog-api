@@ -9,11 +9,13 @@ import { AuthService } from '../../common/auth/auth.service';
 import { Result } from '../../../config/result-beans/Result';
 import { AuthGuard } from '@nestjs/passport';
 import * as _ from 'lodash';
+import { Topic } from '../../../interface/topic.interface';
+import { TopicService } from '../../../service/topic/topic.service';
 
 @Controller('frontend/users')
 export class UserController {
   logger = new Logger();
-  constructor(private userService: UserService, private authService: AuthService) { }
+  constructor(private userService: UserService, private authService: AuthService, private topicService: TopicService) { }
 
 
   @Post('signin')
@@ -60,6 +62,30 @@ export class UserController {
     }
   }
 
+  @Get('topics')
+  @UseGuards(AuthGuard('jwt'))
+  async userTopics(@Request() req, @Query() topic: Topic, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+      const user = await this.userService.findOne({username: req.user.username, password: req.user.password});
+      const cond = {
+          from_uid: user._id
+      };
+      if(topic.topic_type) {
+          cond['topic_type']= topic.topic_type;
+      }
+      if(topic.from_uid) {
+          cond['from_uid'] = topic.from_uid;
+      }
+      if(topic.put_top) {
+          cond['put_top'] = topic.put_top;
+      }
+      const t = await this.topicService.findUserTopic(cond, '', new Pagination({currentPage, pageSize}));
+      return {
+          items: t[0],
+          totalCount: t[1],
+          code: 0,
+          msg: '获取主题列表成功',
+      }
+  }
 
 
   @Get()

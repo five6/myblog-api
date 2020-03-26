@@ -22,6 +22,18 @@ export class TopicService {
           }
     }
 
+    async findUserTopic(json: Topic, fields: string = '', pagination: Pagination) {
+      try {
+          const skip = (pagination.currentPage - 1) * pagination.pageSize;
+          return await Promise.all([
+            this.topicModel.find(json).skip(skip).limit(pagination.pageSize).exec(),
+            this.topicModel.countDocuments(json).exec(),
+          ]);
+        } catch (error) {
+          this.logger.error(error);
+          return [[], 0];
+        }
+    }
     /**
      * 创建主题
      * @param topicDto 
