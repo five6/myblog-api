@@ -24,4 +24,7 @@ export class Topic {
   @IsString()
   to_uid: string;
 
+  @IsString()
+  isDeleted: boolean
+
 }

@@ -12,7 +12,7 @@ import { ToolsService } from '../../service/tools/tools.service';
 import { AdminauthMiddleware } from '../../middleware/adminauth.middleware';
 import { UserController } from './user/user.controller';
 import { TopicSchema } from '../../schema/topic.schema';
-import { TopicTypeSchema } from '../../schema/topic-type.schema';
+import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { ReplySchema } from '../../schema/reply.schema';
 
 @Module({
@@ -20,7 +20,7 @@ import { ReplySchema } from '../../schema/reply.schema';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
       { name: 'Topic', schema: TopicSchema, collection: 'topic' },
-      // { name: 'Topic_type', schema: TopicTypeSchema, collection: 'reply_type' },
+      { name: 'SysCommon', schema: SysCommonSchema, collection: 'sys-common' },
       { name: 'Reply', schema: ReplySchema, collection: 'reply' },
     ]),
   ],

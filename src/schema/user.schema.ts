@@ -34,6 +34,11 @@ const _UserSchema = new mongoose.Schema({
     type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
     select: false,
   },
+  forbidden: {
+    type: Boolean,
+    required: true,
+    default: false
+}
 });
 
 _UserSchema.methods = {

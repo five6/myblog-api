@@ -6,4 +6,9 @@ export const ReplySchema = new mongoose.Schema({
     content: String,
     from_uid: String,
     to_uid: String,
+    isDeleted: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
 });

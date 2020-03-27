@@ -8,6 +8,7 @@ import { UserController } from './user/user.controller';
 import { TopicController } from './topic/topic.controller';
 import { ReplyController } from './reply/reply.controller';
 import { TopicTypeController } from './topic-type/topic-type.controller';
+import { SysCommonController } from './sys-common/sys-common.controller';
 
 import { UserService } from '../../service/user/user.service';
 import { TopicService } from '../../service/topic/topic.service';
@@ -20,13 +21,15 @@ import { AuthModule } from '../common/auth/auth.module';
 import { AuthService } from '../common/auth/auth.service';
 import { jwtConstants } from '../common/auth/constants';
 import { Config } from '../../config/config';
+import { SysCommonSchema } from '../../schema/sys-common.schema';
+import { SysCommonService } from '../../service/sys-common/sys-common.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
       { name: 'Topic', schema: UserSchema, collection: 'topic' },
-      // { name: 'Topic_type', schema: UserSchema, collection: 'reply_type' },
+      { name: 'SysCommon', schema: SysCommonSchema, collection: 'sys-common' },
       { name: 'Reply', schema: UserSchema, collection: 'reply' },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -36,8 +39,8 @@ import { Config } from '../../config/config';
     }),
     AuthModule,
   ],
-  controllers: [UserController, TopicController, ReplyController, TopicTypeController],
-  providers: [UserService, TopicService, ReplyService, TopicTypeService, ToolsService, AuthService],
-  exports: [UserService, TopicService, ReplyService],
+  controllers: [UserController, TopicController, ReplyController, TopicTypeController, SysCommonController],
+  providers: [UserService, TopicService, ReplyService, TopicTypeService, ToolsService, AuthService, SysCommonService],
+  exports: [],
 })
 export class ApiModule { }

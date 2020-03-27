@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsBoolean } from 'class-validator';
+import { IsInt, IsString, IsBoolean, IsNumber } from 'class-validator';
 import { TopicTypeEnum } from 'src/config/enum/TopicTypeEnum';
+import { TopicLevelEnum } from 'src/config/enum/TopicLevelEnum';
+
 
 export class TopicDto {
   _id?: string;
@@ -34,6 +36,18 @@ export class TopicDto {
   from_uid : {
     type: string,
     required: true
+  };
+
+  @IsString()
+  topicLevel : {
+    type: TopicLevelEnum,
+    required: true,
+  };
+
+  @IsBoolean()
+  isDeleted : {
+    type: Boolean,
+    required: true,
   };
 
 

@@ -15,8 +15,50 @@ export class TopicController {
 
     }
 
-    @Get()
-    async index(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+    @Get('recommend')
+    async recommend(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+       const cond = {};
+       if(query.topic_type) {
+           cond['topic_type']= query.topic_type;
+       }
+       if(query.from_uid) {
+           cond['from_uid'] = query.from_uid;
+       }
+       if(query.put_top) {
+            cond['put_top'] = query.put_top;
+       }
+        const topic = await this.topicService.find(cond, '', new Pagination({currentPage, pageSize}));
+        return {
+            items: topic[0],
+            totalCount: topic[1],
+            code: 0,
+            msg: '获取主题列表成功',
+        }
+    }
+
+    @Get('recommend')
+    async hot(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+       const cond = {};
+       if(query.topic_type) {
+           cond['topic_type']= query.topic_type;
+       }
+       if(query.from_uid) {
+           cond['from_uid'] = query.from_uid;
+       }
+       if(query.put_top) {
+            cond['put_top'] = query.put_top;
+       }
+        const topic = await this.topicService.find(cond, '', new Pagination({currentPage, pageSize}));
+        return {
+            items: topic[0],
+            totalCount: topic[1],
+            code: 0,
+            msg: '获取主题列表成功',
+        }
+    }
+
+    @Get('following')
+    async fetchFollowings(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
        const cond = {};
        if(query.topic_type) {
            cond['topic_type']= query.topic_type;

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsEmail } from 'class-validator';
+import { IsInt, IsString, IsEmail, IsBoolean } from 'class-validator';
 
 export class UserDto {
   _id?: string;
@@ -34,4 +34,10 @@ export class UserDto {
 
   @IsInt()
   registerTime?: number;
+
+  @IsBoolean()
+  forbidden : {
+    type: Boolean,
+    required: true,
+  };
 }

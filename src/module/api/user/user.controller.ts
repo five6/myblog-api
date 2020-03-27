@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger, UseGuards, Response } from '@nestjs/common';
 
 import { UserService } from '../../../service/user/user.service';
 import { User } from '../../../interface/user.interface';
@@ -11,11 +11,23 @@ import { AuthGuard } from '@nestjs/passport';
 import * as _ from 'lodash';
 import { Topic } from '../../../interface/topic.interface';
 import { TopicService } from '../../../service/topic/topic.service';
+import { ToolsService } from '../../../service/tools/tools.service';
 
 @Controller('frontend/users')
 export class UserController {
   logger = new Logger();
-  constructor(private userService: UserService, private authService: AuthService, private topicService: TopicService) { }
+  constructor(private userService: UserService, 
+    private authService: AuthService,
+    private toolService: ToolsService,
+    private topicService: TopicService) { }
+
+  @Get('captcha')
+  index(@Request() req, @Response() res) {
+      const captcha = this.toolService.getCaptcha();
+      req.session.code = captcha.text;
+      res.type('image/svg+xml');
+      res.send(captcha.data);
+  }
 
 
   @Post('signin')
