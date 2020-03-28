@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards, Logger, Post, Body } from '@nestjs/common';
 import { Result } from '../../../config/result-beans/Result';
 import { AuthGuard } from '@nestjs/passport';
 import { SysCommonService } from '../../../service/sys-common/sys-common.service';
-import { SysCommonDto } from 'src/dto/sys-common.dto';
+import { SysCommonDto } from '../../../dto/sys-common.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('frontend/sys-common')

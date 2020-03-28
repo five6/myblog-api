@@ -19,7 +19,8 @@ export class AuthService {
   }
 
   async signin(user: any) {
-    const payload = { username: user.username, password: user.password };
+    // TODO 后面可以放置更多的参数
+    const payload = { username: user.username, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
     };

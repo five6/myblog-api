@@ -10,7 +10,7 @@ export class ToolsService {
             size: 4,
             fontSize: 50,
             width: 100,
-            height: 34,
+            height: 40,
             background: '#d8c0ff'
         });
         return captcha;

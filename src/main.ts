@@ -41,11 +41,11 @@ async function bootstrap() {
     .setTitle('56网站后台接口')
     .setDescription('56网站后台接口描述')
     .setVersion('1.0')
-    // .addTag('user')
+    .addTag('blog')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api-doc', app, document);
 
-  await app.listen(9999);
+  await app.listen(7000);
 }
 bootstrap();

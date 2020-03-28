@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger, UseGuards, Response } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Request, UnauthorizedException, Logger, UseGuards, Response, Session } from '@nestjs/common';
 
 import { UserService } from '../../../service/user/user.service';
 import { User } from '../../../interface/user.interface';
@@ -31,11 +31,35 @@ export class UserController {
 
 
   @Post('signin')
-  async login(@Body() body) {
+  async login(@Body() body, @Session() session): Promise<Result> {
+    if(body.captcha !== session.code) {
+      return {
+        datas: null,
+        code: -1,
+        msg: '验证码不正确！'
+      };
+    };
     const user = await this.userService.findOne({username: body.username, password: body.password});
-    if(!user) 
-      throw new UnauthorizedException();
-    return this.authService.signin(body);
+    if(!user) {
+      return {
+        datas: null,
+        code: -1,
+        msg: '用户名不存在或密码错误！'
+      };
+    }
+    const obj = await this.authService.signin(user);
+    if(obj && obj.access_token)
+      return {
+        datas: obj.access_token,
+        code: 0,
+        msg: '登录成功'
+      };
+    return {
+        datas: null,
+        code: -1,
+        msg: '登录失败'
+    };
+      
   }
 
   @Post('signup')
