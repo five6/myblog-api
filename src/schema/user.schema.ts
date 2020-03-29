@@ -5,7 +5,7 @@ import * as crypto from 'crypto';
 const d = new Date();
 const _UserSchema = new mongoose.Schema({
   __v: { type: Number, select: false },
-  nickName: { type: String },
+  nickName: { type: String, default: '昵称未设置，去设置一个喜欢的网名吧' },
   gender: { type: String, default: 'male',enum: ['male', 'female']},
   username: {type: String},
   password: { type: String },

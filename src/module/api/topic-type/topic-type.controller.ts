@@ -4,7 +4,7 @@ import { TopicTypeEnum } from '../../../config/enum/TopicTypeEnum';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('topic-type')
+@Controller('frontend/topic-type')
 export class TopicTypeController {
     
     @Get()

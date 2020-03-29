@@ -5,4 +5,5 @@ export interface Topic {
     content?: string;
     put_top?: boolean;
     from_uid?: string;
+    isDeleted?: boolean;
 }

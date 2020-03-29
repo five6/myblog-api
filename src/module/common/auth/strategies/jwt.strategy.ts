@@ -14,6 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { username: payload.username, password: payload.password };
+    // TODO 后面可以放置更多的参数
+    return { username: payload.username, email: payload.email };
   }
 }

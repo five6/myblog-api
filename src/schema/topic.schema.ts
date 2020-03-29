@@ -10,7 +10,7 @@ export const TopicSchema = new mongoose.Schema({
     },
     topic_type: {
         type: String,
-        default: TopicTypeEnum.NORMAL,
+        default: TopicTypeEnum.share,
         required: true
     },
     content: {

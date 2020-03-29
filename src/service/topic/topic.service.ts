@@ -9,7 +9,7 @@ export class TopicService {
     logger = new Logger();
     constructor(@InjectModel('Topic') private readonly topicModel) {}
 
-    async find(json: Topic = {}, fields: string = '', pagination: Pagination) {
+    async find(json: Topic, fields: string = '', pagination: Pagination) {
         try {
             const skip = (pagination.currentPage - 1) * pagination.pageSize;
             return await Promise.all([
