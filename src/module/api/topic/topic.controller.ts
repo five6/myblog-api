@@ -60,13 +60,35 @@ export class TopicController {
         };
     }
 
+    @Get('/detail')
+    async detail(@Query() query , @Req() req): Promise<Result> {
+        const t =  await this.topicService.findOne(query.id);
+        if(!t) {
+            return {
+                datas: null,
+                code: -1,
+                msg: '文章不存在', 
+            };
+        }
+        if(req.user.id != t.from_uid && t.level !== TopicLevelEnum.public) {
+            throw new ForbiddenException('您无权查询此文章！'); 
+        }
+        if(t)
+          return {
+            datas: t,
+            code: 0,
+            msg: '文章获取成功',
+          }
+      
+    }
+
     async delete() {
         // 逻辑删除 isDeleted: true 即可
     }
 
     @Put()
     async update(@Body() topic: TopicDto, @Req() req): Promise<Result> {
-        if(req.user.id !== topic.from_uid) throw new ForbiddenException('您无权修改此话题！'); 
+        if(req.user.id !== topic.from_uid) throw new ForbiddenException('您无权修改此文章！'); 
         const result =  await this.topicService.update(topic);
         if(result && result.nModified)
           return {

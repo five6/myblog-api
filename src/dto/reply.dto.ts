@@ -8,10 +8,6 @@ export class Topic {
   @ApiProperty({description: '回复目标id'})
   reply_id: string;
 
-  @IsString()
-  @ApiProperty({description: '回复类型'})
-  reply_type: string;
-
   @ApiProperty({description: '回复内容'})
   @IsString()
   content: string;

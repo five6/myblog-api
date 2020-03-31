@@ -37,9 +37,12 @@ export const TopicSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    createTime: { type: Number, default: d.getTime() },
+    lastUpdateTime: { type: Number, default: d.getTime() },
     isDeleted: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        select: false
     }
 });

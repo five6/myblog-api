@@ -4,10 +4,17 @@ import { ResultPagination } from '../../config/result-beans/ResultPagination';
 import {Topic} from '../../interface/topic.interface';
 import { Pagination } from '../../config/result-beans/Pagination';
 import { TopicDto } from 'src/dto/topic.dto';
+import * as _ from 'lodash';
+import * as mongoose from 'mongoose';
+
 @Injectable()
 export class TopicService {
     logger = new Logger();
-    constructor(@InjectModel('Topic') private readonly topicModel) {}
+    constructor(
+      @InjectModel('Topic') private readonly topicModel,
+      @InjectModel('Reply') private readonly replyModel,
+      @InjectModel('User') private readonly userModel
+      ) {}
 
     async find(json: Topic, fields: string = '', pagination: Pagination) {
         try {
@@ -20,6 +27,21 @@ export class TopicService {
             this.logger.error(error);
             return [[], 0];
           }
+    }
+
+    async findOne(id: String) {
+      let results = await Promise.all([
+        this.topicModel.findById(id).exec(),
+        this.replyModel.find({reply_id: id }, '_id,').skip(0).limit(50).exec(),
+      ]);
+      if(! results[0]) {
+        return null;
+      }
+      let topicData = results[0].toJSON();
+      const user = await this.userModel.findById(topicData.from_uid).exec();
+      topicData.author = _.pick(user.toJSON(), ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl']);
+      topicData.replies = !results[1] || results.length  ?  []: results[1].toJSON();
+      return topicData;
     }
 
     async findUserTopic(json: Topic, fields: string = '', pagination: Pagination) {

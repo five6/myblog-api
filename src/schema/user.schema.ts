@@ -13,6 +13,7 @@ const _UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true},
   mobile: { type: Number, unique: true},
   avatarUrl: { type: String },
+  useDefaultAvatarUrl: { type: Boolean, default: true },
   registerTime: { type: Number, default: d.getTime() },
   salt: { type: String },
   /** TODO 后期加入组织 */
@@ -42,9 +43,13 @@ const _UserSchema = new mongoose.Schema({
   forbidden: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
+    select: false
 }
 });
+
+_UserSchema.index({ username: -1, email: -1, mobile: 1 });
+
 
 _UserSchema.methods = {
   authenticate(password) {
@@ -65,5 +70,4 @@ _UserSchema.methods = {
     }
   },
 };
-
 export const UserSchema = _UserSchema;

@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 
+const d = new Date();
 export const ReplySchema = new mongoose.Schema({
     reply_id: String,
-    reply_type: String,
     content: String,
     from_uid: String,
     to_uid: String,
@@ -14,9 +14,11 @@ export const ReplySchema = new mongoose.Schema({
     },
     like_num: Number, // 点赞数量
     put_top: Boolean, // 是否置顶
+    createTime: { type: Number, default: d.getTime() },
     isDeleted: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        select: false
     },
 });
