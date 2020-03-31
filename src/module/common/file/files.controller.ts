@@ -1,9 +1,9 @@
-import { Post, Get, Param, Res, Controller, UseInterceptors, UploadedFiles, HttpStatus, HttpException } from '@nestjs/common';
+import { Post, Get, Param, Res, Controller, UseInterceptors, UploadedFiles, HttpStatus, HttpException, UseGuards } from '@nestjs/common';
 import { ApiConsumes,  } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
 import { ResponseFile } from '../../../config/result-beans/ResponseFile';
-
+import { AuthGuard } from '@nestjs/passport';
 
 
 @Controller('files')
@@ -13,6 +13,7 @@ export class FilesController {
 
 
     @Post()
+    @UseGuards(AuthGuard('jwt'))
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FilesInterceptor('file'))
     upload(@UploadedFiles() files) {
@@ -73,6 +74,8 @@ export class FilesController {
         return filestream.pipe(res) 
     }
 
+
+    @UseGuards(AuthGuard('jwt'))
     @Get('delete/:id')
     async deleteFile(@Param('id') id: string): Promise<ResponseFile> {
         const file = await this.filesService.find(id)

@@ -1,20 +1,32 @@
 import * as mongoose from 'mongoose';
 import { TopicTypeEnum } from '../config/enum/TopicTypeEnum';
+import { TopicLevelEnum } from '../config/enum/TopicLevelEnum';
+
 
 const d = new Date();
 export const TopicSchema = new mongoose.Schema({
     __v: { type: Number, select: false },
     title: {
         type: String,
-        required: true
+        required: true,
+        maxlength:50,
     },
-    topic_type: {
+    title_image: {
         type: String,
+        required: false
+    },
+    type: {
+        type: TopicTypeEnum,
         default: TopicTypeEnum.share,
         required: true
     },
     content: {
         type: String,
+        required: true
+    },
+    level: {
+        type: TopicLevelEnum,
+        default: TopicLevelEnum.public,
         required: true
     },
     put_top: {

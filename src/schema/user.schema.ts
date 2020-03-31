@@ -10,8 +10,8 @@ const _UserSchema = new mongoose.Schema({
   gender: { type: String, default: 'male',enum: ['male', 'female']},
   username: {type: String, required: true, unique:true, minlength: 6, maxlength: 20},
   password: { type: String, required: true, minlength: 6},
-  email: { type: String, required: true},
-  mobile: { type: Number},
+  email: { type: String, required: true, unique: true},
+  mobile: { type: Number, unique: true},
   avatarUrl: { type: String },
   registerTime: { type: Number, default: d.getTime() },
   salt: { type: String },
@@ -20,23 +20,23 @@ const _UserSchema = new mongoose.Schema({
   // 组织id
   organization_id: {type: String},
   following: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    type: [{ type: String }],
     select: false,
   },
   followingTopics: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
+    type: [{ type: String }],
     select: false,
   },
   likingAnswers: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    type: [{ type: String }],
     select: false,
   },
   dislikingAnswers: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    type: [{ type: String}],
     select: false,
   },
   collectingAnswers: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+    type: [{ type: String }],
     select: false,
   },
   forbidden: {

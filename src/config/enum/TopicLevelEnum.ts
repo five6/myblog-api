@@ -1,4 +1,4 @@
 export enum TopicLevelEnum {
-    PRIVATE='PRIVATE',
-    ALL='ALL',
+    private='private',
+    public='public',
 }

@@ -63,13 +63,21 @@ export class UserController {
   }
 
   @Post('signup')
-  async signup(@Body() user: UserDto) {
+  async signup(@Body() user, @Session() session) {
+    if(user.captcha !== session.code) {
+      return {
+        datas: null,
+        code: -1,
+        msg: '验证码不正确！'
+      };
+    };
     const u =  await this.userService.signup(user);
     if(u)
       return new Result({
         datas: {
           username: u.username,
-          password: user.password
+          // password: user.password,
+          email: u.email
         },
         code: 0,
         msg: '注册成功',
@@ -79,12 +87,6 @@ export class UserController {
       code: -1,
       msg: '注册失败',
     });
-  }
-
-  @Get('signout')
-  @UseGuards(AuthGuard('jwt'))
-  async signout(@Body() userDto: UserDto) {
-      return this.authService.signout();
   }
 
   @Get('profile')
@@ -105,8 +107,8 @@ export class UserController {
       const cond = {
           from_uid: user._id
       };
-      if(topic.topic_type) {
-          cond['topic_type']= topic.topic_type;
+      if(topic.type) {
+          cond['type']= topic.type;
       }
       if(topic.from_uid) {
           cond['from_uid'] = topic.from_uid;

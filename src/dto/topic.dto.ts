@@ -9,7 +9,7 @@ export class TopicDto {
 
   @IsString()
   @ApiProperty({description: '文章类型', required: true})
-  topic_type: {
+  type: {
     type: TopicTypeEnum,
   };
 
@@ -19,6 +19,14 @@ export class TopicDto {
     type: string,
     required: true
   };
+
+  @IsString()
+  @ApiProperty({description: '文章标题', required:  true})
+  title_image?: {
+    type: string,
+    required: true
+  };
+
 
   @IsString()
   @ApiProperty({description: '文章内容', required: true})
@@ -39,7 +47,7 @@ export class TopicDto {
   };
 
   @IsString()
-  topicLevel : {
+  level : {
     type: TopicLevelEnum,
     required: true,
   };
