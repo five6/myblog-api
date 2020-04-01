@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Req, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ResultPagination } from '../../config/result-beans/ResultPagination';
 import {Topic} from '../../interface/topic.interface';
@@ -67,5 +67,17 @@ export class TopicService {
 
     async update(topicDto: TopicDto) {
       return await this.topicModel.updateOne({ _id: topicDto._id }, { $set: topicDto });
+    
+    
+    }
+
+    async delete(id: string, user) {
+      const topic = await this.topicModel.findById(id).exec();
+      if(! topic || topic.isDeleted) {
+        throw new NotFoundException('当前删除的文章不存在');
+      } else if(topic.from_uid !== user.id) {
+        throw new ForbiddenException('您无权执行删除操作');
+      } else
+      return await this.topicModel.updateOne({ _id: id }, { $set: { isDeleted: true } });
     }
 }

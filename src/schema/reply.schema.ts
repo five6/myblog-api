@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 const d = new Date();
 export const ReplySchema = new mongoose.Schema({
-    reply_id: String,
+    topic_id: String,
     content: String,
     from_uid: String,
     to_uid: String,

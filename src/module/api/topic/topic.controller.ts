@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Query, Post, Body, Put, BadRequestException, Req, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, UseGuards, Query, Post, Body, Put, BadRequestException, Req, ForbiddenException, Delete, Param } from '@nestjs/common';
 import { ResultPagination } from '../../../config/result-beans/ResultPagination';
 import { AuthGuard } from '@nestjs/passport';
 import { TopicService } from '../../../service/topic/topic.service';
@@ -39,7 +39,7 @@ export class TopicController {
             items: topic[0],
             totalCount: topic[1],
             code: 0,
-            msg: '获取主题列表成功',
+            msg: '获取文章列表成功',
         }
     }
 
@@ -82,8 +82,16 @@ export class TopicController {
       
     }
 
-    async delete() {
-        // 逻辑删除 isDeleted: true 即可
+    @Delete()
+    async delete(@Param('id') id: string,  @Req() req) {
+        // 逻辑删除 isDeleted: true 即可， 此文章的回复可以不去修改。前端的回复只有根据文章id获取。如果要删除可以考虑在后台管理网站删除处理。
+        const ret = await this.topicService.delete(id, req.user);
+        if(ret)
+        return {
+          datas: ret,
+          code: 0,
+          msg: '删除成功',
+        }
     }
 
     @Put()
@@ -110,7 +118,8 @@ export class TopicController {
             throw new BadRequestException('查询条件用户ID必须');
         const cond = {
             level: TopicLevelEnum.public,
-            from_uid:topic.from_uid
+            from_uid:topic.from_uid,
+            isDeleted: false
         };
         if(topic.type) {
             cond['type']= topic.type;
@@ -130,7 +139,8 @@ export class TopicController {
     async getSelfTopic(@Req() req, @Query() topic: Topic, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
         const cond = {
             level: TopicLevelEnum.public,
-            from_uid: req.user.id
+            from_uid: req.user.id,
+            isDeleted: false
         };
         if(topic.type) {
             cond['type']= topic.type;

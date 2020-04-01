@@ -105,7 +105,8 @@ export class UserController {
   async userTopics(@Request() req, @Query() topic: Topic, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
       const user = await this.userService.findOne({username: req.user.username, password: req.user.password});
       const cond = {
-          from_uid: user._id
+          from_uid: user._id,
+          isDeleted: false
       };
       if(topic.type) {
           cond['type']= topic.type;
