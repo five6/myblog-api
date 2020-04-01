@@ -16,28 +16,28 @@ const _UserSchema = new mongoose.Schema({
   useDefaultAvatarUrl: { type: Boolean, default: true },
   registerTime: { type: Number, default: d.getTime() },
   salt: { type: String },
-  /** TODO 后期加入组织 */
+  /** TODO: 后期加入组织 */
   user_type: {type: UserTypeEnum, default: UserTypeEnum.people},
-  // 组织id
+  // TODO: 组织表后面创建
   organization_id: {type: String},
   following: {
-    type: [{ type: String }],
+    type: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
     select: false,
   },
   followingTopics: {
-    type: [{ type: String }],
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Topic'}],
     select: false,
   },
   likingAnswers: {
-    type: [{ type: String }],
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Reply'}],
     select: false,
   },
   dislikingAnswers: {
-    type: [{ type: String}],
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Reply'}],
     select: false,
   },
   collectingAnswers: {
-    type: [{ type: String }],
+    type: [{ type: mongoose.Types.ObjectId, ref: 'Reply'}],
     select: false,
   },
   forbidden: {
@@ -45,7 +45,7 @@ const _UserSchema = new mongoose.Schema({
     required: true,
     default: false,
     select: false
-}
+  }
 });
 
 _UserSchema.index({ username: -1, email: -1, mobile: 1 });

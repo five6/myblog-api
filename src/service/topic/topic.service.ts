@@ -19,10 +19,19 @@ export class TopicService {
     async find(json: Topic, fields: string = '', pagination: Pagination) {
         try {
             const skip = (pagination.currentPage - 1) * pagination.pageSize;
-            return await Promise.all([
-              this.topicModel.find(json).skip(skip).limit(pagination.pageSize).exec(),
-              this.topicModel.countDocuments(json).exec(),
+            const topicArray = await Promise.all([
+              this.topicModel.find(json).skip(skip).limit(pagination.pageSize).populate('from_uid').lean(),
+              this.topicModel.countDocuments(json).lean(),
             ]);
+            const topicItems = _.map(topicArray[0], topicItem => {
+              topicItem.author = {};
+              if(topicItem.from_uid && topicItem.from_uid.length) {
+                topicItem.author = _.pick(topicItem.from_uid[0], ['username', 'nickName', 'gender', 'avatarUrl', 'useDefaultAvatarUrl', 'registerTime'])
+              }
+              delete topicItem.from_uid;
+              return topicItem;
+            })
+            return [topicItems, topicArray[1]];
           } catch (error) {
             this.logger.error(error);
             return [[], 0];
@@ -30,26 +39,31 @@ export class TopicService {
     }
 
     async findOne(id: String) {
-      let results = await Promise.all([
-        this.topicModel.findById(id).exec(),
-        this.replyModel.find({reply_id: id }, '_id,').skip(0).limit(50).exec(),
-      ]);
-      if(! results[0]) {
+      try {
+        let results = await Promise.all([
+          this.topicModel.findById(id).lean(),
+          this.replyModel.find({reply_id: id }, '_id,').skip(0).limit(50).lean(),
+        ]);
+        let topicData = results[0];
+        if(!topicData) {
+          throw new NotFoundException('该文章不存在！');
+        }
+        const user = await this.userModel.findById(topicData.from_uid).lean();
+        topicData.author = _.pick(user, ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl']);
+        topicData.replies = !results[1];
+        return topicData;
+      } catch(error) {
+        this.logger.error(error);
         return null;
       }
-      let topicData = results[0].toJSON();
-      const user = await this.userModel.findById(topicData.from_uid).exec();
-      topicData.author = _.pick(user.toJSON(), ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl']);
-      topicData.replies = !results[1] || results.length  ?  []: results[1].toJSON();
-      return topicData;
     }
 
     async findUserTopic(json: Topic, fields: string = '', pagination: Pagination) {
       try {
           const skip = (pagination.currentPage - 1) * pagination.pageSize;
           return await Promise.all([
-            this.topicModel.find(json).skip(skip).limit(pagination.pageSize).exec(),
-            this.topicModel.countDocuments(json).exec(),
+            this.topicModel.find(json).skip(skip).limit(pagination.pageSize).lean(),
+            this.topicModel.countDocuments(json).lean(),
           ]);
         } catch (error) {
           this.logger.error(error);
@@ -72,7 +86,7 @@ export class TopicService {
     }
 
     async delete(id: string, user) {
-      const topic = await this.topicModel.findById(id).exec();
+      const topic = await this.topicModel.findById(id).lean();
       if(! topic || topic.isDeleted) {
         throw new NotFoundException('当前删除的文章不存在');
       } else if(topic.from_uid !== user.id) {

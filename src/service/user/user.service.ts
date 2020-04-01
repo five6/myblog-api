@@ -11,7 +11,7 @@ export class UserService {
 
 
   async findOne(user: any) {
-    const u = await this.userModel.findOne({$or: [{ username: user.username }, {email: user.username }]}).exec();
+    const u = await this.userModel.findOne({$or: [{ username: user.username }, {email: user.username }]}).lean();
     if (u && u.authenticate(user.password)) {
         return u;
     }
@@ -22,8 +22,8 @@ export class UserService {
     try {
       const skip = (pagination.currentPage - 1) * pagination.pageSize;
       return await Promise.all([
-        this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize).exec(),
-        this.userModel.countDocuments(json).exec(),
+        this.userModel.find(json, fields).skip(skip).limit(pagination.pageSize).lean(),
+        this.userModel.countDocuments(json).lean(),
       ]);
     } catch (error) {
       this.logger.error(error);

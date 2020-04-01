@@ -94,7 +94,7 @@ export class UserController {
   async currentUser(@Request() req): Promise<Result> {
     const user = await this.userService.findOne({username: req.user.username, password: req.user.password});
     return {
-      datas: user ? _.omit(user.toJSON(), ['password', 'salt']): null,
+      datas: user ? _.omit(user, ['password', 'salt']): null,
       code: user ? 0:  -1,
       msg:  user ? '获取用户信息成功！' : '获取用户信息失败'
     }
@@ -138,7 +138,7 @@ export class UserController {
     const items = await this.userService.find(cond, fields, new Pagination({currentPage, pageSize}));
     return  new ResultPagination({
       items: _.map(items[0], user => {
-        return _.omit(user.toJSON(), ['salt', 'password']);
+        return _.omit(user, ['salt', 'password']);
       }),
       totalCount: items[1],
       code: 0,

@@ -34,9 +34,13 @@ export const TopicSchema = new mongoose.Schema({
         default: false,
     },
     from_uid: {
-        type: String,
+        type: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
         required: true
     },
+    like_num: {
+        type: Number,
+        default: 0
+    }, 
     createTime: { type: Number, default: d.getTime() },
     lastUpdateTime: { type: Number, default: d.getTime() },
     isDeleted: {

@@ -16,7 +16,7 @@ export class ReplyService {
 		
 
 		async create(reply: ReplyDto) {
-			const topic = await this.topicModel.findById(reply.topic_id).exec();
+			const topic = await this.topicModel.findById(reply.topic_id).lean();
 			if(! topic || topic.isdeleted) {
 				throw new NotAcceptableException('您的回复操作无效！');
 			}
@@ -25,7 +25,7 @@ export class ReplyService {
 		}
 
 		async delete(id: string, user) {
-			const reply = await this.replyModel.findById(id).exec();
+			const reply = await this.replyModel.findById(id).lean();
       if(! reply || reply.isDeleted ) {
         throw new NotFoundException('当前删除的回复不存在');
       } else if(reply.from_uid !== user.id) {
@@ -43,8 +43,8 @@ export class ReplyService {
 			try {
 				const skip = (pagination.currentPage - 1) * pagination.pageSize;
 				const results = await Promise.all([
-					this.replyModel.find(json).skip(skip).limit(pagination.pageSize).exec(),
-					this.replyModel.countDocuments(json).exec(),
+					this.replyModel.find(json).skip(skip).limit(pagination.pageSize).lean(),
+					this.replyModel.countDocuments(json).lean(),
 				]);
 				// const userIds =  _.map(results[0], item => {
 				// 	return item.from_uid;

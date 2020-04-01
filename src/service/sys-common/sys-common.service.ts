@@ -11,7 +11,7 @@ export class SysCommonService {
 
 
     async findBanner() {
-      return await this.sysCommonModel.findOne({type: SysCommonTypEnum.BANNER}).exec();
+      return await this.sysCommonModel.findOne({type: SysCommonTypEnum.BANNER}).lean();
     }
 
     async create(sysCommonDto: SysCommonDto) {
