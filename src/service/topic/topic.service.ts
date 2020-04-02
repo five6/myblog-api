@@ -15,22 +15,29 @@ export class TopicService {
       @InjectModel('Reply') private readonly replyModel,
       @InjectModel('User') private readonly userModel
       ) {}
+      pickedUserParams = ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl'];
 
     async find(json: Topic, fields: string = '', pagination: Pagination) {
         try {
+            const topicIds = [];
             const skip = (pagination.currentPage - 1) * pagination.pageSize;
             const topicArray = await Promise.all([
               this.topicModel.find(json).skip(skip).limit(pagination.pageSize).populate('from_uid').lean(),
               this.topicModel.countDocuments(json).lean(),
             ]);
             const topicItems = _.map(topicArray[0], topicItem => {
+              topicIds.push(topicItem.id);
               topicItem.author = {};
               if(topicItem.from_uid && topicItem.from_uid.length) {
-                topicItem.author = _.pick(topicItem.from_uid[0], ['username', 'nickName', 'gender', 'avatarUrl', 'useDefaultAvatarUrl', 'registerTime'])
+                topicItem.author = _.pick(topicItem.from_uid[0], this.pickedUserParams);
               }
               delete topicItem.from_uid;
               return topicItem;
             })
+
+           
+            
+            
             return [topicItems, topicArray[1]];
           } catch (error) {
             this.logger.error(error);
@@ -41,16 +48,16 @@ export class TopicService {
     async findOne(id: String) {
       try {
         let results = await Promise.all([
-          this.topicModel.findById(id).lean(),
+          this.topicModel.findById(id).populate('from_uid').lean(),
           this.replyModel.find({reply_id: id }, '_id,').skip(0).limit(50).lean(),
         ]);
         let topicData = results[0];
         if(!topicData) {
           throw new NotFoundException('该文章不存在！');
         }
-        const user = await this.userModel.findById(topicData.from_uid).lean();
-        topicData.author = _.pick(user, ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl']);
-        topicData.replies = !results[1];
+        topicData.author = _.pick(topicData.from_uid, this.pickedUserParams);
+        topicData.replies = results[1];
+        delete topicData.from_uid;
         return topicData;
       } catch(error) {
         this.logger.error(error);

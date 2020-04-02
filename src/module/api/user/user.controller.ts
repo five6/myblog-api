@@ -94,7 +94,7 @@ export class UserController {
   async currentUser(@Request() req): Promise<Result> {
     const user = await this.userService.findOne({username: req.user.username, password: req.user.password});
     return {
-      datas: user ? _.omit(user, ['password', 'salt']): null,
+      datas: user ? _.omit(user.toJSON(), ['password', 'salt']): null,
       code: user ? 0:  -1,
       msg:  user ? '获取用户信息成功！' : '获取用户信息失败'
     }

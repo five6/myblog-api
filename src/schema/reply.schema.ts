@@ -29,7 +29,10 @@ export const ReplySchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    put_top: Boolean, // 是否置顶
+    put_top: {
+        type: Boolean,
+        default: false
+    }, // 是否置顶
     createTime: { type: Number, default: d.getTime() },
     isDeleted: {
         type: Boolean,

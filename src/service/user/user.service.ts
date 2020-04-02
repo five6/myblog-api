@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { UserDto } from '../../dto/user.dto';
 import { User } from '../../interface/user.interface';
 import { Pagination } from '../../config/result-beans/Pagination';
+import * as _ from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,7 @@ export class UserService {
 
 
   async findOne(user: any) {
-    const u = await this.userModel.findOne({$or: [{ username: user.username }, {email: user.username }]}).lean();
+    const u = await this.userModel.findOne({$or: [{ username: user.username }, {email: user.username }]}).exec();
     if (u && u.authenticate(user.password)) {
         return u;
     }
@@ -32,6 +33,7 @@ export class UserService {
   }
 
   async signup(userDto: UserDto) {
+    userDto.avatarUrl = `f${_.random(1, 6)}.jpeg`;
     const model = this.userModel(userDto)
     const salt = model.makeSalt();
     model.salt = salt;

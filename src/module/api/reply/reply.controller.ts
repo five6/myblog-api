@@ -1,10 +1,12 @@
-import { Controller, Post, Body, Req, Delete, Param, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Req, Delete, Param, Get, Query, UseGuards } from '@nestjs/common';
 import { ReplyDto } from '../../../dto/reply.dto';
 import { ReplyService } from '../../../service/reply/reply.service';
 import { Result } from '../../../config/result-beans/Result';
 import { ResultPagination } from '../../../config/result-beans/ResultPagination';
 import { Pagination } from '../../../config/result-beans/Pagination';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('reply')
 export class ReplyController {
 
