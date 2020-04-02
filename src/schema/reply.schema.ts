@@ -3,16 +3,19 @@ import * as mongoose from 'mongoose';
 const d = new Date();
 export const ReplySchema = new mongoose.Schema({
     topic_id: {
-        type: [{ type: mongoose.Types.ObjectId, ref: 'Topic'}],
+        type: mongoose.Types.ObjectId, 
+        ref: 'Topic',
         required: true
     },
     content: String,
     from_uid: {
-        type: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     to_uid: {
-        type: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+        type: mongoose.Types.ObjectId, 
+        ref: 'User',
         required: true
     },
     parent_reply_id: String,

@@ -34,7 +34,8 @@ export const TopicSchema = new mongoose.Schema({
         default: false,
     },
     from_uid: {
-        type: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     like_num: {

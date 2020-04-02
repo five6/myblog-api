@@ -35,7 +35,44 @@ export class TopicService {
               return topicItem;
             })
 
-           
+            // const replies = await this.replyModel.aggregate({topic_id: {'$in': topicIds}}).sort({'id': '-1'}).populate('from_uid', 'to_uid').skip(0).limit(10).group.lean();
+            const replies =  await this.replyModel.aggregate([
+              { 
+                $match : {
+                  // topic_id: {'$in': topicIds}
+                }
+              },
+              { $group: { _id: {
+                  topic_id: '$topic_id'
+                }} 
+              },
+              {
+                $project: {
+                  "from_uid":1, "to_uid":1, "conent":1, "parent_reply_id":1, reply_level: 1,like_num: 1,put_top:1}
+              },
+              // {
+              //   $lookup: {
+              //     "from": "user",
+              //     "localField": "from_uid",
+              //     "foreignField": "_id",
+              //     "as": "from_author"
+              //   }
+              // },
+              // { 
+              //   $unwind: "$from_author" 
+              // },
+              // {
+              //   $lookup: {
+              //     "from": "user",
+              //     "localField": "to_uid",
+              //     "foreignField": "_id",
+              //     "as": "to_author"
+              //   }
+              // },
+              // { 
+              //   $unwind: "$to_author" 
+              // },
+             ]);
             
             
             return [topicItems, topicArray[1]];
