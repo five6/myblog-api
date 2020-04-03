@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, Delete, Param, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Req, Delete, Param, Get, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { ReplyDto } from '../../../dto/reply.dto';
 import { ReplyService } from '../../../service/reply/reply.service';
 import { Result } from '../../../config/result-beans/Result';
@@ -7,7 +7,7 @@ import { Pagination } from '../../../config/result-beans/Pagination';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('reply')
+@Controller('frontend/comments')
 export class ReplyController {
 
     constructor(private replyService: ReplyService) {}
@@ -29,7 +29,7 @@ export class ReplyController {
         };
     }
 
-    @Delete()
+    @Delete(':id')
     async delete(@Param('id') id: string,  @Req() req) {
         // 逻辑删除 isDeleted: true 即可, 并级连操作回复此回复的话题
         const ret = await this.replyService.delete(id, req.user);
@@ -42,11 +42,25 @@ export class ReplyController {
     }
 
     @Get()
-    async topics(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+    async query(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+        const {topic_id, sort_time} = query;
+        if(!topic_id)  throw new BadRequestException('文章id丢失');
         const cond = {
-            isDeleted: false
+            isDeleted: false,
+            topic_id
         };
-        const reply = await this.replyService.find(cond, '', new Pagination({currentPage, pageSize}));
+        let sort = {};
+        if(sort_time === 'true') {
+            sort = {
+            '_id': -1
+           }
+        } else {
+            sort = {
+                like_num: -1,
+                put_top: -1
+            }
+        }
+        const reply = await this.replyService.find(cond, sort, new Pagination({currentPage, pageSize}));
         return {
             items: reply[0],
             totalCount: reply[1],
@@ -54,4 +68,5 @@ export class ReplyController {
             msg: '获取回复列表成功',
         }
     }
+
 }

@@ -7,14 +7,14 @@ import { Pagination } from '../../config/result-beans/Pagination';
 import * as _ from 'lodash';
 @Injectable()
 export class ReplyService {
-    logger = new Logger();
+	logger = new Logger();
+	pickedUserParams = ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl'];
     constructor(
       @InjectModel('Topic') private readonly topicModel,
       @InjectModel('Reply') private readonly replyModel,
       @InjectModel('User') private readonly userModel
       ) {}
 		
-
 		async create(reply: ReplyDto) {
 			const topic = await this.topicModel.findById(reply.topic_id).lean();
 			if(! topic || topic.isdeleted) {
@@ -26,10 +26,10 @@ export class ReplyService {
 
 		async delete(id: string, user) {
 			const reply = await this.replyModel.findById(id).lean();
-      if(! reply || reply.isDeleted ) {
-        throw new NotFoundException('当前删除的回复不存在');
-      } else if(reply.from_uid !== user.id) {
-        throw new ForbiddenException('您无权执行删除操作');
+			if(! reply || reply.isDeleted ) {
+				throw new NotFoundException('当前删除的回复不存在');
+			} else if(reply.from_uid !== user.id) {
+				throw new ForbiddenException('您无权执行删除操作');
 			} 
 			const cond = {};
 			cond['$in'] = [{
@@ -39,17 +39,27 @@ export class ReplyService {
 			return await this.replyModel.updateMany(cond, { $set: { isDeleted: true } }).where;
 		}
 
-		async find(json: Reply, fields: string = '', pagination: Pagination) {
+		async find(json: Reply,  sort: any,  pagination: Pagination) {
 			try {
 				const skip = (pagination.currentPage - 1) * pagination.pageSize;
 				const results = await Promise.all([
-					this.replyModel.find(json).skip(skip).limit(pagination.pageSize).lean(),
+					this.replyModel.find(json).sort(sort).skip(skip).limit(pagination.pageSize).populate('from_uid').populate('to_uid').lean(),
 					this.replyModel.countDocuments(json).lean(),
 				]);
 				// const userIds =  _.map(results[0], item => {
 				// 	return item.from_uid;
 				// });
-				return results;
+				let items = _.map(results[0], item => {
+					item.from_author = _.pick(item.from_uid, this.pickedUserParams);
+					item.to_author = _.pick(item.to_uid, this.pickedUserParams);
+					delete item.from_uid;
+					delete item.to_uid;
+					return item;
+				})
+				return [
+					items,
+					results[1]
+				];
 			} catch (error) {
 				this.logger.error(error);
 				return [[], 0];

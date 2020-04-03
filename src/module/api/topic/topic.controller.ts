@@ -82,7 +82,7 @@ export class TopicController {
       
     }
 
-    @Delete()
+    @Delete(':id')
     async delete(@Param('id') id: string,  @Req() req) {
         // 逻辑删除 isDeleted: true 即可， 此文章的回复可以不去修改。前端的回复只有根据文章id获取。如果要删除可以考虑在后台管理网站删除处理。
         const ret = await this.topicService.delete(id, req.user);
@@ -155,5 +155,21 @@ export class TopicController {
                 code: 0,
                 msg: '获取主题列表成功',
         }
+    }
+
+    @Put('/upvoteCount')
+    async putUpvoteCount(@Query() query, @Req() req) {
+        const result =  await this.topicService.putUpvoteCount(query.id, query.type, req.user);
+        if(result && result.nModified)
+        return {
+            datas: null,
+            code: 0,
+            msg: '赞同成功',
+        }
+        return {
+            datas: null,
+            code: -1,
+            msg: '赞同失败', 
+        };
     }
 }

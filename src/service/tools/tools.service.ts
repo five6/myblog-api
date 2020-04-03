@@ -5,6 +5,11 @@ import * as crypto from 'crypto';
 
 @Injectable()
 export class ToolsService {
+    constructor() {
+
+    }
+
+
     getCaptcha() {
         var captcha = svgCaptcha.create({
             size: 4,
@@ -17,6 +22,10 @@ export class ToolsService {
     }
     getMd5(str:string) {
         return crypto.createHash('md5').update(str).digest('hex');
+    }
+    sendEmail() {
+
+
     }
    
 
