@@ -18,7 +18,9 @@ export const ReplySchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    parent_reply_id: String,
+    parent_reply_id: {
+        type: mongoose.Types.ObjectId
+    },
     reply_level: {
         type: Number,
         required: true,

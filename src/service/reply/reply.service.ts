@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class ReplyService {
 	logger = new Logger();
-	pickedUserParams = ['nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl'];
+	pickedUserParams = ['_id','nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl'];
     constructor(
       @InjectModel('Topic') private readonly topicModel,
       @InjectModel('Reply') private readonly replyModel,

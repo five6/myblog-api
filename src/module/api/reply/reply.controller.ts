@@ -47,17 +47,20 @@ export class ReplyController {
         if(!topic_id)  throw new BadRequestException('文章id丢失');
         const cond = {
             isDeleted: false,
-            topic_id
+            reply_level: 1,
+            topic_id,
         };
         let sort = {};
         if(sort_time === 'true') {
             sort = {
-            '_id': -1
+            _id: -1,
+            createTime: -1
            }
         } else {
             sort = {
                 like_num: -1,
-                put_top: -1
+                put_top: -1,
+                dislike_num : 1
             }
         }
         const reply = await this.replyService.find(cond, sort, new Pagination({currentPage, pageSize}));
