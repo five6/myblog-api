@@ -65,8 +65,10 @@ export class ReplyController {
         }
         const reply = await this.replyService.find(cond, sort, new Pagination({currentPage, pageSize}));
         return {
-            items: reply[0],
-            totalCount: reply[1],
+            // items: reply[0],
+            // totalCount: reply[1],
+            items: [],
+            totalCount: 0,
             code: 0,
             msg: '获取回复列表成功',
         }
