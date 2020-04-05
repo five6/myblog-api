@@ -5,6 +5,7 @@ import { Result } from '../../../config/result-beans/Result';
 import { ResultPagination } from '../../../config/result-beans/ResultPagination';
 import { Pagination } from '../../../config/result-beans/Pagination';
 import { AuthGuard } from '@nestjs/passport';
+import * as mongoose from 'mongoose';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('frontend/comments')
@@ -65,10 +66,24 @@ export class ReplyController {
         }
         const reply = await this.replyService.find(cond, sort, new Pagination({currentPage, pageSize}));
         return {
-            // items: reply[0],
-            // totalCount: reply[1],
-            items: [],
-            totalCount: 0,
+            items: reply[0],
+            totalCount: reply[1],
+            code: 0,
+            msg: '获取回复列表成功',
+        }
+    }
+
+    /**
+     * 前端查询单个评论更多回复
+     * @param current_id base objectId
+     * @param topic_id 文章objectId
+     * @param parent_reply_id 回复的评论objectId
+     * @param backward 是否往前查看： 是：1 否：不传
+     */
+    async findMoreReplyComments(@Query() current_id: mongoose.Types.ObjectId , @Query() topic_id: mongoose.Types.ObjectId, @Query() parent_reply_id: mongoose.Types.ObjectId, backward?: number) {
+        const datas = await this.replyService.findMoreReplyComments(current_id, topic_id, parent_reply_id, backward);
+        return {
+            datas,
             code: 0,
             msg: '获取回复列表成功',
         }

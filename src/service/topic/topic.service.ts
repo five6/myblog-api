@@ -22,16 +22,10 @@ export class TopicService {
         try {
             const skip = (pagination.currentPage - 1) * pagination.pageSize;
             const topicArray = await Promise.all([
-              this.topicModel.find(json, fields).skip(skip).limit(pagination.pageSize).populate('from_uid').lean(),
+              this.topicModel.find(json, fields).skip(skip).limit(pagination.pageSize).populate('from_uid', this.pickedUserParams).lean(),
               this.topicModel.countDocuments(json).lean(),
             ]);
-            const topicItems = _.map(topicArray[0], topicItem => {
-              topicItem.author = _.pick(topicItem.from_uid, this.pickedUserParams);
-              delete topicItem.from_uid;
-              return topicItem;
-            })
-
-            return [topicItems, topicArray[1]];
+            return [topicArray[0], topicArray[1]];
           } catch (error) {
             this.logger.error(error);
             return [[], 0];
@@ -40,12 +34,10 @@ export class TopicService {
 
     async findOne(id: String) {
       try {
-        let topicData = await this.topicModel.findById(id).populate('from_uid').lean();
+        let topicData = await this.topicModel.findById(id).populate('from_uid', this.pickedUserParams).lean();
         if(!topicData) {
           throw new NotFoundException('该文章不存在！');
         }
-        topicData.author = _.pick(topicData.from_uid, this.pickedUserParams);
-        delete topicData.from_uid;
         return topicData;
       } catch(error) {
         this.logger.error(error);
