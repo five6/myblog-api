@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotAcceptableException, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, NotAcceptableException, NotFoundException, ForbiddenException, Post } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ReplyDto } from '../../dto/reply.dto';
 import * as mongoose from 'mongoose';
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class ReplyService {
 	logger = new Logger();
-	QUERY_LIMIT = 10;
+	QUERY_LIMIT = 50; // 当前评论的回复数
 	pickedUserParams = ['_id','nickName', 'username', 'avatarUrl', 'registerTime', 'useDefaultAvatarUrl'];
     constructor(
       @InjectModel('Topic') private readonly topicModel,
@@ -51,6 +51,7 @@ export class ReplyService {
 				const topicIds = _.map(comments, item => {
 					return item._id;
 				});
+				// TODO: 修改查询方式，通过每个topic id 创建一个查询，保证每个topic的回复都能查到50条数据，而不是所有id加起来才50条
 				const replies = await this.replyModel.find({ parent_reply_id: { $in : topicIds }, reply_level: 2, isDeleted: false, topic_id: json.topic_id}).sort({_id: -1}).skip(0).limit(this.QUERY_LIMIT).populate('from_uid',this.pickedUserParams).populate('to_uid', this.pickedUserParams).lean();
 				const grouped =_.groupBy(replies, 'parent_reply_id');
 				comments = _.each(comments, item => {
@@ -67,9 +68,9 @@ export class ReplyService {
 			}
 		}
 
-		async findMoreReplyComments(current_id: mongoose.Types.ObjectId, topic_id: mongoose.Types.ObjectId, parent_reply_id: mongoose.Types.ObjectId, backward: number) {
+		async findMoreReplyComments(body) {
 			try {
-				return await this.replyModel.find({ parent_reply_id, reply_level: 2, isDeleted: false, topic_id: topic_id, _id: {$lt: current_id}}).sort({_id: backward === 1 ? 1: -1}).limit(this.QUERY_LIMIT).populate('from_uid',this.pickedUserParams).populate('to_uid', this.pickedUserParams).lean();
+				return await this.replyModel.find({ parent_reply_id: mongoose.Types.ObjectId(body.parent_reply_id), reply_level: 2, isDeleted: false, topic_id: mongoose.Types.ObjectId(body.topic_id), _id: body.next_page === 1 ? { $lt: mongoose.Types.ObjectId(body.current_id)} : {$gt: mongoose.Types.ObjectId(body.current_id)} }).sort({_id: -1}).limit(this.QUERY_LIMIT).populate('from_uid',this.pickedUserParams).populate('to_uid', this.pickedUserParams).lean();
 			} catch (error) {
 				this.logger.error(error);
 				return [];

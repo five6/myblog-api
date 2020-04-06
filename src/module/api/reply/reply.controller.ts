@@ -78,10 +78,12 @@ export class ReplyController {
      * @param current_id base objectId
      * @param topic_id 文章objectId
      * @param parent_reply_id 回复的评论objectId
-     * @param backward 是否往前查看： 是：1 否：不传
+     * @param next_page 分页方式： 上一页：-1 下一页：1
      */
-    async findMoreReplyComments(@Query() current_id: mongoose.Types.ObjectId , @Query() topic_id: mongoose.Types.ObjectId, @Query() parent_reply_id: mongoose.Types.ObjectId, backward?: number) {
-        const datas = await this.replyService.findMoreReplyComments(current_id, topic_id, parent_reply_id, backward);
+
+    @Post('more-sub-comments')
+    async findMoreReplyComments(@Body() body) {
+        const datas = await this.replyService.findMoreReplyComments(body);
         return {
             datas,
             code: 0,
