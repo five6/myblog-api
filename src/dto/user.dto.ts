@@ -35,8 +35,7 @@ export class UserDto {
   @IsInt()
   registerTime?: number;
 
-  @IsBoolean()
-  forbidden : {
+  locked : {
     type: Boolean,
     required: true,
   };

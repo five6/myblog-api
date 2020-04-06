@@ -68,8 +68,6 @@ export class TopicService {
 
     async update(topicDto: TopicDto) {
       return await this.topicModel.updateOne({ _id: topicDto._id }, { $set: topicDto });
-    
-    
     }
 
     async delete(id: string, user) {

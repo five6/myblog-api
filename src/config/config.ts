@@ -15,6 +15,14 @@ export class Config {
   // jwt过期时间
   static jwtExpireTime = '1d';
 
+  // 邮件发送地址
+  static mail_conf = {
+    user: '936333511@qq.com',
+    pass: 'xdcuxzvtylkkbfhb'
+  }
+
+  static http_server = 'http://127.0.0.1:7000';
+
   static redisOptions = {
     port: 6379,
     host: '127.0.0.1',

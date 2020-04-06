@@ -6,15 +6,17 @@ import { UserTypeEnum } from '../config/enum/UserTypeEnum';
 const d = new Date();
 const _UserSchema = new mongoose.Schema({
   __v: { type: Number, select: false },
-  nickName: { type: String, default: '昵称未设置，去设置一个喜欢的网名吧' },
+  nickName: { type: String, default: this.username },
   gender: { type: String, default: 'male',enum: ['male', 'female']},
   username: {type: String, required: true, unique:true, minlength: 6, maxlength: 20},
   password: { type: String, required: true, minlength: 6},
   email: { type: String, required: true, unique: true},
-  mobile: { type: Number, unique: true},
+  // mobile: { type: Number, unique: true},
   avatarUrl: { type: String },
   useDefaultAvatarUrl: { type: Boolean, default: true },
   registerTime: { type: Number, default: d.getTime() },
+  unValidateEmail: { type: Boolean, default: true },
+  unValidateEmailToken: { type: String, },
   salt: { type: String },
   /** TODO: 后期加入组织 */
   user_type: {type: UserTypeEnum, default: UserTypeEnum.people},
@@ -40,7 +42,7 @@ const _UserSchema = new mongoose.Schema({
     type: [{ type: mongoose.Types.ObjectId, ref: 'Reply'}],
     select: false,
   },
-  forbidden: {
+  locked: {
     type: Boolean,
     required: true,
     default: false,

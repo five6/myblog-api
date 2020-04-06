@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 import { Topic } from '../../../interface/topic.interface';
 import { TopicService } from '../../../service/topic/topic.service';
 import { ToolsService } from '../../../service/tools/tools.service';
+import { Config } from '../../../config/config';
 
 @Controller('frontend/users')
 export class UserController {
@@ -20,7 +21,7 @@ export class UserController {
     private authService: AuthService,
     private toolService: ToolsService,
     private topicService: TopicService) { }
-
+  
   @Get('captcha')
   index(@Request() req, @Response() res) {
       const captcha = this.toolService.getCaptcha();
@@ -28,6 +29,18 @@ export class UserController {
       res.type('image/svg+xml');
       res.send(captcha.data);
   }
+
+  @Get('validate/account/:id')
+  async validateAccount(@Param('id') unValidateEmailToken: String, @Response() res) {
+      const u = await this.userService.validateAccount(unValidateEmailToken);
+      if(u)
+      return {
+        datas: null,
+        code: 0,
+        msg: '恭喜，您的账户已经完成注册！'
+      };
+  }
+
 
 
   @Post('signin')
@@ -46,8 +59,21 @@ export class UserController {
         code: -1,
         msg: '用户名不存在或密码错误！'
       };
-    }
-    const obj = await this.authService.signin(user);
+    }// 当用户禁用提示用户账号被锁定
+     else if(user.locked) {
+        return {
+          datas: null,
+          code: -1,
+          msg: '用户已被锁定，禁止登录'
+        };
+    }  else if(user.unValidateEmail) {
+      return {
+        datas: null,
+        code: -1,
+        msg: '用户尚未激活，请激活后重试'
+      };
+  }
+  const obj = await this.authService.signin(user);
     if(obj && obj.access_token)
       return {
         datas: obj.access_token,
@@ -72,7 +98,8 @@ export class UserController {
       };
     };
     const u =  await this.userService.signup(user);
-    if(u)
+    if(u) {
+      this.toolService.sendEmailToUser(user.email, user.username, user.password,`${Config.http_server}/${Config.api_prefix}/frontend/users/validate/account/${u.unValidateEmailToken}`);
       return new Result({
         datas: {
           username: u.username,
@@ -82,6 +109,8 @@ export class UserController {
         code: 0,
         msg: '注册成功',
       });
+    }
+     
     return new Result({
       datas: null,
       code: -1,

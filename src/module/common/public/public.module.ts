@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
     imports:[
-        RedisModule.register(Config.redisOptions),
+        // RedisModule.register(Config.redisOptions),
         MongooseModule.forRoot(Config.mongo_db, { useNewUrlParser: true, useUnifiedTopology: true })
     ],
     providers: [],
