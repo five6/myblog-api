@@ -48,16 +48,14 @@ export class ReplyService {
 					this.replyModel.countDocuments(json).lean(),
 				]);
 				let comments = results[0];
-				const topicIds = _.map(comments, item => {
-					return item._id;
+				const promises = _.map(comments, item => {
+					return this.replyModel.find({ parent_reply_id: item._id, reply_level: 2, isDeleted: false, topic_id: json.topic_id}).sort({_id: -1}).skip(0).limit(this.QUERY_LIMIT).populate('from_uid',this.pickedUserParams).populate('to_uid', this.pickedUserParams).lean();
 				});
-				// TODO: 修改查询方式，通过每个topic id 创建一个查询，保证每个topic的回复都能查到50条数据，而不是所有id加起来才50条
-				const replies = await this.replyModel.find({ parent_reply_id: { $in : topicIds }, reply_level: 2, isDeleted: false, topic_id: json.topic_id}).sort({_id: -1}).skip(0).limit(this.QUERY_LIMIT).populate('from_uid',this.pickedUserParams).populate('to_uid', this.pickedUserParams).lean();
-				const grouped =_.groupBy(replies, 'parent_reply_id');
-				comments = _.each(comments, item => {
-					item.children = grouped[item._id.toString()] || [];
+				const result = await Promise.all(promises);
+				comments = _.map(comments, (item, index) => {
+					item.children = result[index];
 					return item;
-				})
+				});
 				return [
 					comments,
 					results[1]

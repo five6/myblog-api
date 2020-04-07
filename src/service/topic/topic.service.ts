@@ -25,7 +25,16 @@ export class TopicService {
               this.topicModel.find(json, fields).skip(skip).limit(pagination.pageSize).populate('from_uid', this.pickedUserParams).lean(),
               this.topicModel.countDocuments(json).lean(),
             ]);
-            return [topicArray[0], topicArray[1]];
+            const propmises = _.map(topicArray[0], item => {
+					      return this.replyModel.countDocuments({topic_id: item._id, reply_level: 1, isDeleted: false}).lean()
+            });
+
+            const countList = await Promise.all(propmises);
+
+            return [_.map(topicArray[0], (item, index) => {
+              item.commentCount = countList[index];
+              return item;
+            }), topicArray[1]];
           } catch (error) {
             this.logger.error(error);
             return [[], 0];
@@ -91,7 +100,7 @@ export class TopicService {
         throw new NotAcceptableException('无法对自己的文章投票');
       } else {
         let incBody = {};
-        if(type = 'up') {
+        if(type === 'up') {
           incBody = {
            upvoteCount: 1
           }
