@@ -17,7 +17,7 @@ export class TopicController {
     }
 
     @Get()
-    async topics(@Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
+    async topics(@Req() req, @Query() query: any, @Query('pageSzie') pageSize?: number, @Query('currentPage') currentPage?: number): Promise<ResultPagination> {
         const cond = {
             isDeleted: false,
             level: TopicLevelEnum.public
@@ -34,7 +34,7 @@ export class TopicController {
         if(query.title) {
             cond['title'] = new RegExp(query.title)
         }
-        const topic = await this.topicService.find(cond, '', new Pagination({currentPage, pageSize}));
+        const topic = await this.topicService.find(cond, '', new Pagination({currentPage, pageSize}), req.user);
         return {
             items: topic[0],
             totalCount: topic[1],
@@ -62,7 +62,7 @@ export class TopicController {
 
     @Get('/detail')
     async detail(@Query() query , @Req() req): Promise<Result> {
-        const t =  await this.topicService.findOne(query.id);
+        const t =  await this.topicService.findOne(query.id, req.user);
         if(!t) {
             return {
                 datas: null,
@@ -160,7 +160,7 @@ export class TopicController {
     @Put('/upvoteCount')
     async putUpvoteCount(@Query() query, @Req() req) {
         const result =  await this.topicService.putUpvoteCount(query.id, query.type, req.user);
-        if(result && result.nModified)
+        if(result)
         return {
             datas: null,
             code: 0,

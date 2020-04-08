@@ -38,10 +38,6 @@ export const TopicSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    upvoteCount: {
-        type: Number,
-        default: 0
-    },
     createTime: { type: Number, default: d.getTime() },
     lastUpdateTime: { type: Number, default: d.getTime() },
     isDeleted: {

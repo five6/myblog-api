@@ -23,6 +23,7 @@ import { jwtConstants } from '../common/auth/constants';
 import { Config } from '../../config/config';
 import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { SysCommonService } from '../../service/sys-common/sys-common.service';
+import { UpvoteSchema } from '../../schema/upvote.schema';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SysCommonService } from '../../service/sys-common/sys-common.service';
       { name: 'Topic', schema: UserSchema, collection: 'topic' },
       { name: 'SysCommon', schema: SysCommonSchema, collection: 'sys-common' },
       { name: 'Reply', schema: UserSchema, collection: 'reply' },
+      { name: 'Upvote', schema: UpvoteSchema, collection: 'upvote' },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({

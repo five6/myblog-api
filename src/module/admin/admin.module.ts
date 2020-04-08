@@ -14,6 +14,7 @@ import { UserController } from './user/user.controller';
 import { TopicSchema } from '../../schema/topic.schema';
 import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { ReplySchema } from '../../schema/reply.schema';
+import { UpvoteSchema } from '../../schema/upvote.schema';
 
 @Module({
   imports: [
@@ -22,6 +23,8 @@ import { ReplySchema } from '../../schema/reply.schema';
       { name: 'Topic', schema: TopicSchema, collection: 'topic' },
       { name: 'SysCommon', schema: SysCommonSchema, collection: 'sys-common' },
       { name: 'Reply', schema: ReplySchema, collection: 'reply' },
+      { name: 'Upvote', schema: UpvoteSchema, collection: 'upvote' },
+
     ]),
   ],
   controllers: [UserController],
