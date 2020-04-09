@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { SysCommonTypEnum } from '../../config/enum/SysCommonTypenum';
+import {SysCommonTypEnum} from '../../config/enum/SysCommonTypEnum'
+
 import { SysCommonDto } from '../../dto/sys-common.dto';
 
 @Injectable()

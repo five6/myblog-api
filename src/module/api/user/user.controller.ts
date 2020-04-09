@@ -33,7 +33,6 @@ export class UserController {
   @Get('validate/account/:id')
   async validateAccount(@Param('id') unValidateEmailToken: String, @Response() res) {
       const u = await this.userService.validateAccount(unValidateEmailToken);
-      if(u)
       return {
         datas: null,
         code: 0,

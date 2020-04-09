@@ -41,12 +41,12 @@ export class ToolsService {
         return cryptoRandomString({length: 64, type: CryptoRandomStringType.urlSsafe});
     }
     async sendEmail(mail: string, title: any, body: any) {
-        let info = await this.transporter.sendMail({
+        let info = {
             from: Config.mail_conf.user, // sender address
             to: mail, // list of receivers
             subject: title, // Subject line
             html: body // html body
-        });
+        }
         return new Promise((resolve,reject) => {
             this.transporter.sendMail(info,(err,info) => {
                 if(err){
