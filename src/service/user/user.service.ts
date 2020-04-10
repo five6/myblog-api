@@ -13,7 +13,7 @@ export class UserService {
 
   async validateAccount(unValidateEmailToken: String) {
     const u = await this.userModel.findOne({unValidateEmailToken }).lean();
-    if(! u) throw new NotFoundException('用户不存在, 或账户已验证！');
+    if(! u) throw new NotFoundException('找不到此用户，请通过发件人联系管理员！');
     else if(new Date().getTime() - u.registerTime > 86400000) {
       throw new NotAcceptableException('注册时长超过一天，不允许激活。请通过发件人联系管理员！');
     } else {
@@ -21,7 +21,8 @@ export class UserService {
         $set: {
           unValidateEmail: false
         },
-        $unset:{ 'unValidateEmailToken':''}
+        // 取消
+        // $unset:{ 'unValidateEmailToken':''}
       });
     }
   }
