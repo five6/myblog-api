@@ -58,4 +58,23 @@ export class UserService {
     return await model.save();
   }
 
+  async getUserByToken(token: string) {
+    const user = await this.userModel.findOne({jwtToken: token.replace('Bearer ', '')}).lean();
+    if(user)
+    return {
+      id: user._id, 
+      username: user.username, 
+      email: user.email,
+      nickName: user.nickName, 
+      avatarUrl: user.avatarUrl,
+      registerTime: user.registerTime, 
+      useDefaultAvatarUrl: user.useDefaultAvatarUrl
+    }
+    return null;
+  }
+
+  async update(userDto: any) {
+    return await this.userModel.updateOne({ _id: userDto._id }, { $set: userDto });
+  }
+
 }

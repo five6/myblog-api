@@ -71,20 +71,21 @@ export class UserController {
         code: -1,
         msg: '用户尚未激活，请激活后重试'
       };
-  }
-  const obj = await this.authService.signin(user);
-    if(obj && obj.access_token)
+    }
+    const obj = await this.authService.signin(user);
+    if(obj && obj.access_token) {
+      const ret = await this.userService.update({_id: user._id, jwtToken: obj.access_token});
       return {
         datas: obj.access_token,
         code: 0,
         msg: '登录成功'
       };
+    }
     return {
         datas: null,
         code: -1,
         msg: '登录失败'
     };
-      
   }
 
   @Post('signup')

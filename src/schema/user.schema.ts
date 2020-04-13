@@ -16,6 +16,7 @@ const _UserSchema = new mongoose.Schema({
   useDefaultAvatarUrl: { type: Boolean, default: true },
   registerTime: { type: Number, default: d.getTime() },
   unValidateEmail: { type: Boolean, default: true },
+  jwtToken: { type: String }, // jwt token字符串
   unValidateEmailToken: { type: String, },
   salt: { type: String },
   /** TODO: 后期加入组织 */

@@ -32,6 +32,10 @@ export class UserDto {
   @ApiProperty({description: '用户手机号'})
   mobile?: number;
 
+  @IsString()
+  @ApiProperty({description: '用户jwt token'})
+  jwtToken?: string
+
   @IsInt()
   registerTime?: number;
 

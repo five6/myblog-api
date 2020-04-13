@@ -1,4 +1,4 @@
-import { Module, LoggerService } from '@nestjs/common';
+import { Module, LoggerService, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -24,7 +24,7 @@ import { Config } from '../../config/config';
 import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { SysCommonService } from '../../service/sys-common/sys-common.service';
 import { UpvoteSchema } from '../../schema/upvote.schema';
-
+import {ApiAuthMiddleware} from '../../middleware/apiauth.middleware';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -45,4 +45,12 @@ import { UpvoteSchema } from '../../schema/upvote.schema';
   providers: [UserService, TopicService, ReplyService, TopicTypeService, ToolsService, AuthService, SysCommonService],
   exports: [],
 })
-export class ApiModule { }
+export class ApiModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ApiAuthMiddleware).
+       forRoutes(
+         { path: '*/topics', method: RequestMethod.GET },
+        );
+  }
+ }

@@ -37,22 +37,23 @@ export class TopicService {
                 }).lean()
               );
               // 当用户登录
-              if(user)
-              propmise3.push(
-                this.upvoteModel.findOne({
-                  from_uid: user.id,
-                  topic_id: item._id,
-                  status: 1
-                }).lean()
-              )
+              if(user) {
+                propmise3.push(
+                  this.upvoteModel.findOne({
+                    from_uid: user.id,
+                    topic_id: item._id,
+                    status: 1
+                  }).lean()
+                )
+              }
             });
             const commentCount = await Promise.all(propmise1);
             const upvoteCount = await Promise.all(propmise2);
             
             let userUpvoteCount;
-            if(user)
+            if(user) {
               userUpvoteCount = await Promise.all(propmise3);
-
+            }
             return [_.map(topicArray[0], (item, index) => {
               item.commentCount = commentCount[index];
               item.upvoteCount = upvoteCount[index];
