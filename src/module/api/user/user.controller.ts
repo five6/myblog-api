@@ -33,11 +33,7 @@ export class UserController {
   @Get('validate/account/:id')
   async validateAccount(@Param('id') unValidateEmailToken: String, @Response() res) {
       await this.userService.validateAccount(unValidateEmailToken);
-      return {
-        datas: null,
-        code: 0,
-        msg: '恭喜，您的账户已经完成注册！'
-      };
+      res.end('success!')
   }
 
 
