@@ -27,10 +27,7 @@ export class TopicService {
               this.topicModel.find(json, fields).skip(skip).limit(pagination.pageSize).populate('from_uid', this.pickedUserParams).lean(),
               this.topicModel.countDocuments(json).lean(),
             ]);
-            const propmise1 = [];
-            const propmise2 = [];
-            const propmise3 = [];
-
+            const propmise1 = [], propmise2 = [], propmise3 = [];
             _.map(topicArray[0], item => {
               propmise1.push(this.replyModel.countDocuments({topic_id: item._id, reply_level: 1, isDeleted: false}).lean());
               propmise2.push(
@@ -39,6 +36,8 @@ export class TopicService {
                   status: 1
                 }).lean()
               );
+              // 当用户登录
+              if(user)
               propmise3.push(
                 this.upvoteModel.findOne({
                   from_uid: user.id,
@@ -49,13 +48,15 @@ export class TopicService {
             });
             const commentCount = await Promise.all(propmise1);
             const upvoteCount = await Promise.all(propmise2);
-            const userUpvoteCount = await Promise.all(propmise3);
+            
+            let userUpvoteCount;
+            if(user)
+              userUpvoteCount = await Promise.all(propmise3);
 
             return [_.map(topicArray[0], (item, index) => {
               item.commentCount = commentCount[index];
               item.upvoteCount = upvoteCount[index];
-              item.hasUpvotedCount = userUpvoteCount[index] ? true : false
-
+              item.hasUpvotedCount = userUpvoteCount ? (userUpvoteCount[index] ? true : false) : false
               return item;
             }), topicArray[1]];
           } catch (error) {
@@ -71,17 +72,22 @@ export class TopicService {
         if(!topicData) {
           throw new NotFoundException('该文章不存在！');
         }
-        const countResult = await Promise.all([
+        const promises = [
           this.upvoteModel.countDocuments({
             topic_id: topicData._id,
             status: 1
-          }).lean(),
+          }).lean()
+        ];
+        if(user) {
+          promises.push(
             this.upvoteModel.findOne({
               from_uid: user.id,
               topic_id: topicData._id,
               status: 1
             }).lean()
-        ]);
+          )
+        }
+        const countResult = await Promise.all(promises);
         topicData.upvoteCount = countResult[0];
         topicData.hasUpvotedCount = countResult[1] ? true : false
         return topicData;

@@ -32,7 +32,7 @@ export class UserController {
 
   @Get('validate/account/:id')
   async validateAccount(@Param('id') unValidateEmailToken: String, @Response() res) {
-      const u = await this.userService.validateAccount(unValidateEmailToken);
+      await this.userService.validateAccount(unValidateEmailToken);
       return {
         datas: null,
         code: 0,
@@ -174,4 +174,15 @@ export class UserController {
     });
   }
 
+  @Get('check/authorized')
+  @UseGuards(AuthGuard('jwt'))
+  async checkUserAuthorized() {
+    return {
+      datas: null,
+      code: 0,
+      msg: '用户获取成功'
+    };
+  }
+
+  
 }

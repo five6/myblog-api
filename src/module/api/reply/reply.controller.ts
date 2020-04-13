@@ -7,12 +7,12 @@ import { Pagination } from '../../../config/result-beans/Pagination';
 import { AuthGuard } from '@nestjs/passport';
 import * as mongoose from 'mongoose';
 
-@UseGuards(AuthGuard('jwt'))
 @Controller('frontend/comments')
 export class ReplyController {
 
     constructor(private replyService: ReplyService) {}
 
+    @UseGuards(AuthGuard('jwt'))
     @Post()
     async create(@Body() reply: ReplyDto, @Req() req): Promise<Result> {
         reply.from_uid = req.user.id;
@@ -30,6 +30,7 @@ export class ReplyController {
         };
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async delete(@Param('id') id: string,  @Req() req) {
         // 逻辑删除 isDeleted: true 即可, 并级连操作回复此回复的话题
