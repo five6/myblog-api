@@ -16,6 +16,11 @@ import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { ReplySchema } from '../../schema/reply.schema';
 import { UpvoteSchema } from '../../schema/upvote.schema';
 
+import { SpecailSubjectSchema } from '../../schema/special-subject.schema';
+import { SubeSpecailSubjectSchema } from '../../schema/sub-special-subject.schema';
+import { SpecailSubjectTopicSchema } from '../../schema/special-subject-topic.schema';
+import { specialSubjectReplySchema } from '../../schema/special-subject-reply.schema';
+import { SpecialSubjectTopicUpvoteSchema } from '../../schema/special-subject-topic-upvote.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -25,6 +30,13 @@ import { UpvoteSchema } from '../../schema/upvote.schema';
       { name: 'Reply', schema: ReplySchema, collection: 'reply' },
       { name: 'Upvote', schema: UpvoteSchema, collection: 'upvote' },
 
+
+      // 专题
+      { name: 'SpecialSubject', schema: SpecailSubjectSchema, collection: 'special_subject' },
+      { name: 'SubSpecialSubject', schema: SubeSpecailSubjectSchema, collection: 'sub_special_subject' },
+      { name: 'SpecialSubjectTopic', schema: SpecailSubjectTopicSchema, collection: 'special_subject_topic' },
+      { name: 'SpecialSubjectReply', schema: specialSubjectReplySchema, collection: 'reply' },
+      { name: 'SpecialSubjectTopicUpvote', schema: SpecialSubjectTopicUpvoteSchema, collection: 'special_subject_topic_upvote' },
     ]),
   ],
   controllers: [UserController],

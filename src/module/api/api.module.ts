@@ -25,14 +25,29 @@ import { SysCommonSchema } from '../../schema/sys-common.schema';
 import { SysCommonService } from '../../service/sys-common/sys-common.service';
 import { UpvoteSchema } from '../../schema/upvote.schema';
 import {ApiAuthMiddleware} from '../../middleware/apiauth.middleware';
+import { TopicSchema } from '../../schema/topic.schema';
+import { ReplySchema } from '../../schema/reply.schema';
+import { SpecailSubjectSchema } from '../../schema/special-subject.schema';
+import { SubeSpecailSubjectSchema } from '../../schema/sub-special-subject.schema';
+import { SpecailSubjectTopicSchema } from '../../schema/special-subject-topic.schema';
+import { specialSubjectReplySchema } from '../../schema/special-subject-reply.schema';
+import { SpecialSubjectTopicUpvoteSchema } from '../../schema/special-subject-topic-upvote.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema, collection: 'user' },
-      { name: 'Topic', schema: UserSchema, collection: 'topic' },
       { name: 'SysCommon', schema: SysCommonSchema, collection: 'sys-common' },
-      { name: 'Reply', schema: UserSchema, collection: 'reply' },
+
+      { name: 'Topic', schema: TopicSchema, collection: 'topic' },
+      { name: 'Reply', schema: ReplySchema, collection: 'reply' },
       { name: 'Upvote', schema: UpvoteSchema, collection: 'upvote' },
+
+      // 专题
+      { name: 'SpecialSubject', schema: SpecailSubjectSchema, collection: 'special_subject' },
+      { name: 'SubSpecialSubject', schema: SubeSpecailSubjectSchema, collection: 'sub_special_subject' },
+      { name: 'SpecialSubjectTopic', schema: SpecailSubjectTopicSchema, collection: 'special_subject_topic' },
+      { name: 'SpecialSubjectReply', schema: specialSubjectReplySchema, collection: 'reply' },
+      { name: 'SpecialSubjectTopicUpvote', schema: SpecialSubjectTopicUpvoteSchema, collection: 'special_subject_topic_upvote' },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
