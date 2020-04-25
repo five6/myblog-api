@@ -38,13 +38,13 @@ async function bootstrap() {
 
 
   const options = new DocumentBuilder()
-    .setTitle('56网站后台接口')
-    .setDescription('56网站后台接口描述')
+    .setTitle('博客后台接口')
+    .setDescription('接口描述')
     .setVersion('1.0')
-    .addTag('blog')
+    .addTag('博客')
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api-doc', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(7000);
 }
